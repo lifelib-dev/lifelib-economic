@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Test and tool caches
+.pytest_cache/
+.benchmarks/
+.ipynb_checkpoints/
+
+# Backups that modelx's write_model makes of a model folder
+*_BAK[0-9]*/
+
+# Excel lock files while a workbook is open
+~$*
