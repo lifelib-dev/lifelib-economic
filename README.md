@@ -103,3 +103,9 @@ mean against the closed form.
 The statistical tests run the Validation checks with 10,000 scenarios over 50 years and
 2,000 over 150 years. A check with m z-scores passes if its largest |z| is below
 Φ⁻¹(1 − 0.00135/m), the same chance of a false alarm as one 3-sigma check.
+
+## License
+
+MIT, like lifelib; see [LICENSE](LICENSE). `CashValue_ME_G2PP` is derived from lifelib's
+`CashValue_ME_EX4`, and the example curves in `g2pp_input.xlsx` come from lifelib's
+appliedlife data, whose stated source is EIOPA.
