@@ -33,6 +33,7 @@ In `lifelib/libraries/economic/`:
 | `CashValue_ME_G2PP/` | TVOG example: lifelib's `CashValue_ME_EX4` with a copy of `G2PP` as space `ESG` |
 | `g2pp-simulation.ipynb` | fan charts, martingale check, yield distributions, bond fund, validation summary |
 | `g2pp-tvog.ipynb` | model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
+| `plot_ex4_g2pp_rate_fan.py`, `plot_ex5_g2pp_martingale.py` | scripts for the gallery in lifelib's docs: fan charts of the short rate and the 10-year yield, and the martingale tests |
 | `tests/` | the library's pytest suite, with `g2pp_registry.py` (paths and helpers) and `reference_g2pp.py`, a pure-numpy reference implementation |
 | `BasicHullWhite/`, `hull-white-simulation.ipynb`, `plot_ex1_*.py` to `plot_ex3_*.py`, `README.txt` | lifelib's own library, unchanged |
 
