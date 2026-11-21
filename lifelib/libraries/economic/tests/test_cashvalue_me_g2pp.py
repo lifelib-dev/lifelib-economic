@@ -1,8 +1,9 @@
-"""Phase 4: CashValue_ME_G2PP, lifelib's CashValue_ME_EX4 driven by the ESG space.
+"""CashValue_ME_G2PP: lifelib's CashValue_ME_EX4 driven by the ESG space.
 
-The integration tests of PLAN.md section 8 use EX4's single-premium model points 1, 2, 5,
-6 and 9, which mature at month 120 with no fees or decrements. The level-premium points
-build up account values far above the sum assured, so their GMAB cost is zero.
+The integration tests of section 8 of the design note, ``_research/g2pp_design.md``, use
+EX4's single-premium model points 1, 2, 5, 6 and 9, which mature at month 120 with no fees
+or decrements. The level-premium points build up account values far above the sum
+assured, so their GMAB cost is zero.
 """
 import shutil
 import uuid

@@ -1,4 +1,7 @@
-"""Phase 0: g2pp_input.xlsx reads into pandas as specified in PLAN.md section 5."""
+"""g2pp_input.xlsx reads into pandas as specified.
+
+The specification is section 5 of the design note, ``_research/g2pp_design.md``.
+"""
 import numpy as np
 import pandas as pd
 

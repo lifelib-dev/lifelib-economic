@@ -1,8 +1,9 @@
-"""Phase 1: closed forms and formulas of the numpy reference implementation.
+"""Closed forms and formulas of the numpy reference implementation.
 
-These tests check the reference itself, so that "the model equals the reference" (Phase 2)
-means the model is right. Integrals use scipy's adaptive quadrature on the covariance
-kernels of x and y, which are simpler than the closed forms being tested.
+These tests check the reference itself, so that "the model equals the reference"
+(test_model_g2pp.py) means the model is right. Integrals use scipy's adaptive quadrature
+on the covariance kernels of x and y, which are simpler than the closed forms being
+tested.
 """
 import numpy as np
 import pytest

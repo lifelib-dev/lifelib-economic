@@ -1,4 +1,4 @@
-"""Phase 2: BasicG2PP against the numpy reference, input checks and the round trip."""
+"""BasicG2PP against the numpy reference, input checks and the round trip."""
 import re
 import shutil
 import uuid

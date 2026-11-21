@@ -1,8 +1,9 @@
-"""Pure-numpy reference implementation of the G2++ scenario generator (PLAN.md section 4).
+"""Pure-numpy reference implementation of the G2++ scenario generator.
 
-It does not use modelx. The tests run it with the same inputs and seed as BasicG2PP and
-require the two to agree to 1e-12. Formulas use ``expm1`` where the textbook form
-``1 - exp(-x)`` loses digits for small x, exactly as the model does.
+It implements section 4 of the design note, ``_research/g2pp_design.md``, without modelx.
+The tests run it with the same inputs and seed as BasicG2PP and require the two to agree
+to 1e-12. Formulas use ``expm1`` where the textbook form ``1 - exp(-x)`` loses digits for
+small x, exactly as the model does.
 
 Notation follows Brigo and Mercurio (2nd ed. 2006), section 4.2: r = x + y + phi,
 dx = -a x dt + sigma dW1, dy = -b y dt + eta dW2, dW1 dW2 = rho dt, on a monthly grid
@@ -166,7 +167,8 @@ class ReferenceG2PP:
     def zcb_return(self, m):
         """(n, N) returns over [t_i, t_{i+1}) of zeros with m months to maturity at t_i.
 
-        Uses the cancelled formula of PLAN.md section 4, which needs no curve beyond t_n.
+        Uses the cancelled formula of the design note's section 4, which needs no curve
+        beyond t_n.
         """
         sim = self.simulate()
         x, y = sim["x"], sim["y"]

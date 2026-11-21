@@ -1,8 +1,9 @@
-"""Phase 3: the Validation space and the statistical tests of PLAN.md section 8.
+"""The Validation space, and the statistical tests of the library's design note.
 
-The fast tests check the space itself. The tests marked slow run the statistical checks
-with 10,000 antithetic scenarios over 50 years, and with 2,000 scenarios over 150 years.
-They run by default; ``-m "not slow"`` leaves them out.
+The fast tests check the space itself. The tests marked slow run the statistical checks of
+section 8 of the design note, ``_research/g2pp_design.md``, with 10,000 antithetic
+scenarios over 50 years, and with 2,000 scenarios over 150 years. They run by default;
+``-m "not slow"`` leaves them out.
 
 A test with m z-scores passes if its largest |z| is below Phi^-1(1 - 0.00135/m): the same
 chance of a false alarm as a single 3-sigma check, and a limit of 3 when m = 1.
