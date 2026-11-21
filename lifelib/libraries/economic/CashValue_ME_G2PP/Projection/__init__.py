@@ -15,9 +15,9 @@ from the space ESG, a copy of the :mod:`~economic.BasicG2PP.G2PP` space of Basic
 * :func:`disc_factors` are ESG's deflators, instead of EX4's flat discount rate.
 * :func:`result_tvog` gives the TVOG of the GMAB, the GMDB and the net cash flow, and
   :func:`formula_gmab_g2pp` the closed-form GMAB cost it can be checked against.
-* :func:`check_pv_net_cf` discounts month by month; EX4's version calls
-  ``disc_factors()`` without ``t`` and fails. :func:`check_margin` is unchanged and
-  returns ``False`` here as in EX4, because the margins leave out the GMAB claims.
+* :func:`check_pv_net_cf` discounts each month's net cash flows with the deflators of
+  their scenarios. :func:`check_margin` is unchanged and returns ``False`` here as in
+  EX4, because the margins leave out the GMAB claims.
 
 EX4's ``scen_size``, ``scen_id``, ``std_norm_rand``, ``disc_rate_ann``, ``disc_rate_mth``
 and ``formula_option_put`` are removed. The rest of the original description follows.
@@ -461,8 +461,9 @@ def check_pv_net_cf():
     of each cash flow, :func:`pv_net_cf`. Returns the check result as :obj:`True` or
     :obj:`False`.
 
-    Changed from CashValue_ME_EX4, whose version calls ``disc_factors()`` without ``t``
-    and fails; this one discounts each month with ``disc_factors(t)``.
+    Changed from CashValue_ME_EX4, whose discount factors are the same in every
+    scenario: this one multiplies each month's net cash flows by that month's
+    :func:`disc_factors`, which differ by model point and scenario.
     """
     pvs = sum(net_cf(t) * disc_factors(t) for t in range(max_proj_len()))
     return np.all(np.isclose(pvs, pv_net_cf()))
@@ -854,13 +855,12 @@ def inv_income_pp(t):
 def inv_return_mth(t):
     """Rate of investment return
 
-    Rate of monthly investment return for :attr:`scen_id` and ``t``
+    Rate of monthly investment return at ``t``, by model point and scenario,
     read from :func:`inv_return_table`
 
     .. seealso::
 
         * :func:`inv_return_table`
-        * :attr:`scen_id`
 
     """
     return inv_return_table()[:, t]
