@@ -1,14 +1,18 @@
-# lifelib-g2pp
+# lifelib-economic
 
-A G2++ interest rate scenario generator built as a modelx model, for calculating the time
-value of options and guarantees (TVOG) of lifelib insurance liabilities. The design is in
-[PLAN.md](PLAN.md).
+A draft of lifelib's `economic` library, kept here until it is merged into lifelib. So far
+it holds a G2++ interest rate scenario generator built as a modelx model, for calculating
+the time value of options and guarantees (TVOG) of lifelib insurance liabilities. The
+design is in [PLAN.md](PLAN.md), and the plan for the merge in
+[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md).
 
 **Status:** Phases 0–4 of the plan are done: the input workbook, a pure-numpy reference
 implementation, the `BasicG2PP` model with its `G2PP` and `Validation` spaces, the
 statistical tests, and the TVOG example `CashValue_ME_G2PP`, lifelib's
 `savings/CashValue_ME_EX4` driven by the G2++ scenarios. Two notebooks show the
-scenarios and the TVOG. Phase 5 lists optional extensions.
+scenarios and the TVOG. Phase 5 moves the contents to `lifelib/libraries/economic/`, the
+library's path in lifelib, next to a copy of lifelib's own library, and then into lifelib.
+Phase 6 lists optional extensions.
 
 ## Layout
 

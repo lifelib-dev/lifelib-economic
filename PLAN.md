@@ -1,6 +1,6 @@
 # Plan: G2++ economic scenario generator (modelx) for lifelib TVOG
 
-*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9), and every open question is decided (§11).*
+*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9), Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), and every open question is decided (§11).*
 
 ## 1. Goal and scope
 
@@ -68,7 +68,7 @@ uses the exact approach, extended to two factors.
 5. **Parameters as zero-argument Cells** (`a()`, `sigma()`, ...), so the workbook is the
    single source of inputs. This differs from BasicHullWhite, which uses References.
 6. **Variance reduction.** Antithetic variates on by default. A martingale (moment-matching)
-   adjustment is a later option (Phase 5), off by default.
+   adjustment is a later option (Phase 6), off by default.
 7. **Random-number layout `(step_size, scen_size, 3)`**, step-major, so extending the
    horizon leaves earlier months unchanged.
 8. **One main space** (like BasicHullWhite and CashValue_ME), so it can be copied whole
@@ -260,7 +260,7 @@ the curve out to t_i plus the tenor: with a 150-year curve, 10-year yields
 **Project layout**
 
 ```
-lifelib-g2pp/
+lifelib-economic/
 ├── PLAN.md
 ├── README.md
 ├── g2pp_input.xlsx          Excel input, read at run time
@@ -273,6 +273,10 @@ lifelib-g2pp/
 ├── tests/                   pytest: pure-numpy reference implementation and tests
 └── notebooks/               g2pp_scenarios.ipynb, tvog_example.ipynb
 ```
+
+Step A of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) moves the models, the workbook, the
+notebooks and the tests to `lifelib/libraries/economic/`, the library's path in lifelib,
+next to a copy of lifelib's own `economic` library.
 
 `build_model.py` creates the model with the modelx API and writes `BasicG2PP/`. After the
 first build, the written model is the source of truth (edit it directly or in
@@ -473,7 +477,8 @@ points build up account values far above the sum assured, so their GMAB cost is 
 | 2. `BasicG2PP` | `G2PP` space with docstrings, bond fund included, build script, written model | modelx equals the reference to 1e-12; round trip passes |
 | 3. Validation | `Validation` space, statistical tests, notebook with fan chart, martingale plot and yield distributions | all statistical tests pass, including a 150-year run (n = 1,800) |
 | 4. TVOG example | `CashValue_ME_G2PP`, `result_tvog()`, GMAB closed-form check, notebook comparing TVOG across funds | the GMAB pathwise identity holds for every example fund, and the mean is within 3 SE of the closed form for `CASH` and `BOND_10Y` |
-| 5. Later, optional | move `BasicG2PP` into lifelib's `economic` library next to `BasicHullWhite` (decided, §11); space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
+| 5. Into lifelib | `BasicG2PP` and `CashValue_ME_G2PP` in lifelib's `economic` library, next to `BasicHullWhite`: drafted here at the library's lifelib path, then merged (decided, §11; steps in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)) | `lifelib.create("economic", ...)` gives both models |
+| 6. Later, optional | space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
 
 **Status, 2026-11-21**: Phases 0–4 are done.
 
@@ -527,8 +532,11 @@ points build up account values far above the sum assured, so their GMAB cost is 
 5. **Scenario 0 = CE**: kept. Row 0 of every `*_paths()` array and `scen_id` 0 are the
    CE scenario, so one liability run gives both terms of TVOG. Means over the stochastic
    scenarios use rows 1 to N.
-6. **Name and home**: `BasicG2PP` stays in this folder for now and moves later to
-   lifelib's `economic` library, next to `BasicHullWhite` (Phase 5).
+6. **Name and home**: `BasicG2PP` and `CashValue_ME_G2PP` go to lifelib's `economic`
+   library, next to `BasicHullWhite` (Phase 5). This repository, renamed lifelib-economic,
+   drafts that library at its lifelib path, `lifelib/libraries/economic/`, starting from a
+   copy of lifelib's library, and is then merged into lifelib
+   ([INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)).
 
 ## Appendix A. Prototype check
 
