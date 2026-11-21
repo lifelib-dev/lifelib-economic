@@ -5,7 +5,7 @@ lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follo
 in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). lifelib's
 `main` has since moved on to d17cfb7, with the fixes for #182 and #183, but nothing has
 changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Steps A to C
-were done on 2026-11-21 (§8).*
+were done on 2026-11-21, and step D's pull request is open (§8).*
 
 ## 1. Goal
 
@@ -226,7 +226,8 @@ the design note's sections, which keep PLAN.md's numbers, with the optional exte
 | `doc/source/banners.rst`, `doc/source/notebooks.rst` | lifelib | Colab badges for the two notebooks, and rows in the notebook list; both files stay RST |
 | `doc/source/libraries/index.rst` | lifelib | the `economic` row says "Basic Hull-White model"; it should name the G2++ model and the TVOG example too. Its toctree entry `economic/index.rst` still finds `index.md`, as Sphinx drops the suffix, but becomes `economic/index.md`, like the `ifrs17a` and `economic_curves` entries next to it |
 | `README.rst`, `doc/source/quickstart/faq.md` | lifelib | scipy in the README's list of requirements, and in the FAQ's answer to "What Python packages do I need to use lifelib?", which says that lifelib installs only modelx (decision 1) |
-| `doc/source/releases/relnotes_v0.17.rst` | lifelib | a v0.17.4 section: the two models, the library's pages in Markdown, and scipy as a dependency |
+| `devnotes/TESTING.md` | lifelib | `economic` named among the libraries with in-library suites, as the delib pull request named delib |
+| `doc/source/releases/relnotes_v0.17.rst` | lifelib, in step E | a v0.17.4 section: the two models, the library's pages in Markdown, and scipy as a dependency. lifelib writes release notes in the "DIST: Release" commit with the version bump, so this goes there rather than into step D's pull request |
 
 The autosummary pages of the new spaces and the gallery pages are written by each build,
 into folders git ignores, so they need no work.
@@ -308,6 +309,18 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
   and `Projection` by autosummary, and `ESG` by a pointer to the `G2PP` page. The trial
   build is in §7, and the suite gives the same result as after step B. The design note
   stays out of the files lifelib ships, which are otherwise unchanged.
+- Step D, on 2026-11-21, up to the pull request; CI is pending. Nothing had changed in the
+  two folders in lifelib since the base. The branch `feature/economic-g2pp` starts from
+  lifelib's `main` at d17cfb7 and holds 4190721 (scipy in `pyproject.toml`, `setup.py`,
+  the README and the FAQ) and 0292f7e (the two folders restored from 8de1e1f, the
+  notebooks in `notebooks.rst` and `banners.rst`, the libraries table and its toctree
+  entry, and `devnotes/TESTING.md`). In lifelib, the economic suite passes, curve test
+  included, on Python 3.13 with pandas 3.0, on Python 3.12 with pandas 2.2, numpy 2.2 and
+  scipy 1.15, and on Python 3.14t; the whole suite collects (7,360 tests); and the
+  library's files parse under Python 3.10's grammar. A fresh full docs build has only the
+  warnings of v0.17.3's build, and the economic pages, the generated pages, both notebook
+  pages and both gallery pages render. The release notes move to step E (§7). Pull
+  request: [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188).
 
 ## 9. Risks
 

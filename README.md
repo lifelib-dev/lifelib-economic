@@ -17,8 +17,9 @@ are done: the files now sit at `lifelib/libraries/economic/`, the library's path
 lifelib, next to a copy of lifelib's own library, and are adapted to it, with docstring
 links to lifelib's docs, lifelib's Colab cell in the notebooks and two gallery scripts.
 The docs pages of both models are drafted in MyST, and the design is kept in a note in
-the library. The next steps merge the library into lifelib and release it. Phase 6 lists
-optional extensions.
+the library. The pull request that merges the library into lifelib,
+[lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188), is open; a
+release follows it. Phase 6 lists optional extensions.
 
 ## Layout
 
