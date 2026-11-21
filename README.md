@@ -10,35 +10,57 @@ design is in [PLAN.md](PLAN.md), and the plan for the merge in
 implementation, the `BasicG2PP` model with its `G2PP` and `Validation` spaces, the
 statistical tests, and the TVOG example `CashValue_ME_G2PP`, lifelib's
 `savings/CashValue_ME_EX4` driven by the G2++ scenarios. Two notebooks show the
-scenarios and the TVOG. Phase 5 moves the contents to `lifelib/libraries/economic/`, the
-library's path in lifelib, next to a copy of lifelib's own library, and then into lifelib.
-Phase 6 lists optional extensions.
+scenarios and the TVOG. Phase 5 brings all of this into lifelib, and its step A is done:
+the files now sit at `lifelib/libraries/economic/`, the library's path in lifelib, next to
+a copy of lifelib's own library. The next steps adapt their contents, draft the docs pages
+and merge the library into lifelib. Phase 6 lists optional extensions.
 
 ## Layout
 
+The library lives where it will in lifelib: the models, the workbook, the notebooks and the
+tests in `lifelib/libraries/economic/`, and the docs pages in
+`doc/source/libraries/economic/`. Both folders started as a copy of lifelib's own
+`economic` library at v0.17.3, in commit e292f34, so `git diff e292f34 -- lifelib doc`
+shows what merging the draft will change in lifelib
+([INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3).
+
+In `lifelib/libraries/economic/`:
+
 | Path | Contents |
 |---|---|
-| `g2pp_input.xlsx` | Excel input, read by the model at run time |
+| `g2pp_input.xlsx` | Excel input, read by both G2++ models at run time |
 | `BasicG2PP/` | the modelx model: space `G2PP` (the scenarios) and space `Validation` (checks) |
 | `CashValue_ME_G2PP/` | TVOG example: lifelib's `CashValue_ME_EX4` with a copy of `G2PP` as space `ESG` |
-| `notebooks/g2pp_scenarios.ipynb` | fan charts, martingale check, yield distributions, bond fund, validation summary |
-| `notebooks/tvog_example.ipynb` | model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
+| `g2pp-simulation.ipynb` | fan charts, martingale check, yield distributions, bond fund, validation summary |
+| `g2pp-tvog.ipynb` | model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
+| `tests/` | the library's pytest suite, with `g2pp_registry.py` (paths and helpers) and `reference_g2pp.py`, a pure-numpy reference implementation |
+| `BasicHullWhite/`, `hull-white-simulation.ipynb`, `plot_ex1_*.py` to `plot_ex3_*.py`, `README.txt` | lifelib's own library, unchanged |
+
+At the root, staying here:
+
+| Path | Contents |
+|---|---|
 | `scripts/make_input.py` | creates `g2pp_input.xlsx` from lifelib's appliedlife curves (bootstrap only) |
 | `scripts/build_model.py` | creates `BasicG2PP/` with the `G2PP` space through the modelx API (bootstrap only) |
 | `scripts/add_validation_space.py` | adds the `Validation` space to the written model (bootstrap only) |
 | `scripts/build_cashvalue_g2pp.py` | builds `CashValue_ME_G2PP/` from lifelib's EX4 and `G2PP` (bootstrap only) |
-| `tests/` | pytest suite, and `reference_g2pp.py`, a pure-numpy reference implementation |
+| `pytest.ini`, `.gitattributes` | lifelib's pytest options and line-ending rules, so the suite and the files behave as in lifelib |
+| `PLAN.md`, `INTEGRATION_PLAN.md` | the design, and the plan for the merge |
 
 After the first build, edit the model folders (directly or in Spyder-modelx) and
 `g2pp_input.xlsx` themselves. The scripts are not kept in sync, and they refuse to
 overwrite what they created unless given `--force`. To bootstrap from nothing, run
 `make_input.py`, `build_model.py`, `add_validation_space.py` and
-`build_cashvalue_g2pp.py` in that order. lifelib's own files are only read.
+`build_cashvalue_g2pp.py` in that order. They write into the library folder. Run them as
+files, as in `python scripts/make_input.py`: then `import lifelib` finds the installed
+lifelib, whose files they only read, and not this repository's `lifelib/` folder.
 
-Requirements: modelx, numpy, pandas, scipy, openpyxl and pytest. lifelib is needed by
-`make_input.py` to find the source curves, and by two tests, which are skipped without it.
+Requirements: modelx, numpy, pandas, scipy, openpyxl and pytest. An installed lifelib is
+needed only by `make_input.py` and `build_cashvalue_g2pp.py`, for their default sources.
 
 ## Use
+
+From the library folder, `lifelib/libraries/economic/`:
 
 ```python
 import modelx as mx
@@ -92,10 +114,15 @@ has read.
 
 ## Tests
 
+From the repository root, where `pytest.ini` holds lifelib's pytest options:
+
 ```
-python -m pytest              # 89 tests, about 20 s
-python -m pytest --runslow    # also the 18 statistical tests, peaking near 1 GB of memory
+python -m pytest                 # all 107 tests, about 24 s, peaking near 1 GB of memory
+python -m pytest -m "not slow"   # without the 18 statistical tests, about 20 s
 ```
+
+One test skips here: it compares the workbook's curves with appliedlife's source file,
+which sits next to this library in lifelib but is not in this repository.
 
 The tests check the numpy reference against numerical integration and martingale
 properties, and then the model against the reference to a relative 1e-12. They also cover
@@ -110,6 +137,7 @@ The statistical tests run the Validation checks with 10,000 scenarios over 50 ye
 
 ## License
 
-MIT, like lifelib; see [LICENSE](LICENSE). `CashValue_ME_G2PP` is derived from lifelib's
+MIT, like lifelib; see [LICENSE](LICENSE). `BasicHullWhite` and the rest of the copy of
+lifelib's library are lifelib's own files. `CashValue_ME_G2PP` is derived from lifelib's
 `CashValue_ME_EX4`, and the example curves in `g2pp_input.xlsx` come from lifelib's
 appliedlife data, whose stated source is EIOPA.

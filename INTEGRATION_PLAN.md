@@ -4,7 +4,8 @@
 lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follows decision 6
 in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). lifelib's
 `main` has since moved on to d17cfb7, with the fixes for #182 and #183, but nothing has
-changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`.*
+changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Step A was done
+on 2026-11-21 (§8).*
 
 ## 1. Goal
 
@@ -70,7 +71,7 @@ Everything outside the two library folders stays here.
 
 - **Base commit**: lifelib's `lifelib/libraries/economic/` and `doc/source/libraries/economic/`
   at d44068e are copied in with `git archive`, in a commit of their own that names the
-  source commit. Their blobs equal lifelib's.
+  source commit: e292f34 here. Their blobs equal lifelib's.
 - **MyST rewrite**: a later commit of its own rewrites the two RST pages, `index.rst` and
   `BasicHullWhite.rst`, as `index.md` and `BasicHullWhite.md`, without changing what they
   render (decision 7). From then on, `git diff <base> -- lifelib doc` shows exactly what the
@@ -271,6 +272,11 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
 | D. Merge | Bring in any change lifelib made since the base (§3), then restore the two folders from the draft. Add scipy to `pyproject.toml`'s `dependencies` and `setup.py`'s `install_requires`, edit the shared files of §7, build the docs, and open a pull request to `main`. | the docs build without new warnings, the `economic` pages render as in the trial (§7), and both notebook pages render; CI passes on all 15 jobs |
 | E. Release | Merge; release v0.17.4 with the release notes; move the `current` tag, so the Colab badges open the new notebooks. | `pip install lifelib --upgrade` then `lifelib.create("economic", ...)` gives the three models |
 | F. Afterwards | Replace the base here with lifelib's library at the merge commit (decision 6), so the next round starts from what was released. Its pages are MyST by then, so later rounds need no rewrite. | this repository's library equals lifelib's on `main` |
+
+**Done**: step A, on 2026-11-21. The base is e292f34, the MyST rewrite 5ead21b and the
+move 096e189. Every blob of the base equals lifelib's at d44068e. With lifelib's options,
+106 tests pass and the curve test skips, in about 24 s. Both notebooks run from the
+library folder and reproduce their saved outputs.
 
 ## 9. Risks
 

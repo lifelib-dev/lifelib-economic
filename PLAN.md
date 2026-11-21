@@ -1,6 +1,6 @@
 # Plan: G2++ economic scenario generator (modelx) for lifelib TVOG
 
-*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9), Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), and every open question is decided (§11).*
+*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9). Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), whose step A has moved the files to the library's path in lifelib. Every open question is decided (§11).*
 
 ## 1. Goal and scope
 
@@ -261,22 +261,26 @@ the curve out to t_i plus the tenor: with a 150-year curve, 10-year yields
 
 ```
 lifelib-economic/
-├── PLAN.md
-├── README.md
-├── g2pp_input.xlsx          Excel input, read at run time
-├── BasicG2PP/               modelx model: spaces G2PP, Validation
-├── CashValue_ME_G2PP/       TVOG example: savings/CashValue_ME_EX4 plus a copy of G2PP
-├── scripts/make_input.py    creates g2pp_input.xlsx from appliedlife's curves (bootstrap only)
-├── scripts/build_model.py   creates BasicG2PP through the modelx API (bootstrap only)
+├── lifelib/libraries/economic/      the library, at its path in lifelib
+│   ├── g2pp_input.xlsx              Excel input, read at run time
+│   ├── BasicG2PP/                   modelx model: spaces G2PP, Validation
+│   ├── CashValue_ME_G2PP/           TVOG example: savings/CashValue_ME_EX4 plus a copy of G2PP
+│   ├── g2pp-simulation.ipynb, g2pp-tvog.ipynb
+│   ├── tests/                       pytest: pure-numpy reference implementation and tests
+│   └── BasicHullWhite/ and the rest of lifelib's own library
+├── doc/source/libraries/economic/   the library's docs pages, in MyST
+├── scripts/make_input.py            creates g2pp_input.xlsx from appliedlife's curves (bootstrap only)
+├── scripts/build_model.py           creates BasicG2PP through the modelx API (bootstrap only)
 ├── scripts/add_validation_space.py  adds the Validation space to BasicG2PP (bootstrap only)
 ├── scripts/build_cashvalue_g2pp.py  builds CashValue_ME_G2PP from EX4 and G2PP (bootstrap only)
-├── tests/                   pytest: pure-numpy reference implementation and tests
-└── notebooks/               g2pp_scenarios.ipynb, tvog_example.ipynb
+├── pytest.ini, .gitattributes       lifelib's settings
+└── PLAN.md, README.md, INTEGRATION_PLAN.md
 ```
 
-Step A of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) moves the models, the workbook, the
+Step A of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) moved the models, the workbook, the
 notebooks and the tests to `lifelib/libraries/economic/`, the library's path in lifelib,
-next to a copy of lifelib's own `economic` library.
+next to a copy of lifelib's own `economic` library. Paths elsewhere in this document, such
+as `tests/reference_g2pp.py`, are relative to that folder.
 
 `build_model.py` creates the model with the modelx API and writes `BasicG2PP/`. After the
 first build, the written model is the source of truth (edit it directly or in
@@ -413,7 +417,7 @@ apply over [t, t+1). The time origin is the valuation date of the input curve.
 `scripts/build_cashvalue_g2pp.py` does steps 1–3. To compare funds without editing the
 workbook, override the ESG's fund with `esg.fund_id[()] = "CASH"`, which recalculates
 everything that depends on it; `esg.fund_id.clear_all()` restores the workbook's value.
-`notebooks/tvog_example.ipynb` does this for the three example funds.
+`g2pp-tvog.ipynb` does this for the three example funds.
 
 ## 8. Validation and tests
 
@@ -436,7 +440,8 @@ everything that depends on it; `esg.fund_id.clear_all()` restores the workbook's
   fallback)
 - read → write → read round trip of `BasicG2PP`
 
-**Statistical (marked slow; run with `pytest --runslow`)**: 10,000 antithetic scenarios
+**Statistical (marked slow; they run by default, and `-m "not slow"` leaves them out)**:
+10,000 antithetic scenarios
 over 50 years, and 2,000 over 150 years. Standard errors come from antithetic pair means;
 treating the paths as independent overstates them. A check with m z-scores passes if its
 largest |z| is below Φ⁻¹(1 - 0.00135/m). That gives the same 0.27% chance of a false
@@ -480,11 +485,14 @@ points build up account values far above the sum assured, so their GMAB cost is 
 | 5. Into lifelib | `BasicG2PP` and `CashValue_ME_G2PP` in lifelib's `economic` library, next to `BasicHullWhite`: drafted here at the library's lifelib path, then merged (decided, §11; steps in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)) | `lifelib.create("economic", ...)` gives both models |
 | 6. Later, optional | space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
 
-**Status, 2026-11-21**: Phases 0–4 are done.
+**Status, 2026-11-21**: Phases 0–4 are done, and Phase 5 has started: step A of
+[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) is done.
 
-- **Tests:** by default 89 tests pass in about 18 s: 5 on the workbook, 21 on the
-  reference implementation, 41 on the model, 6 on the Validation space and 16 on
-  `CashValue_ME_G2PP`. `--runslow` adds the 18 statistical tests, 107 in about 21 s.
+- **Tests:** 107 tests run in about 24 s: 5 on the workbook, 21 on the reference
+  implementation, 41 on the model, 6 on the Validation space, 16 on `CashValue_ME_G2PP`
+  and the 18 statistical tests, which `-m "not slow"` leaves out. In this repository one
+  workbook test skips, because appliedlife's curve file is only in lifelib; the other 106
+  pass.
 - **TVOG example:** the GMAB cost equals the recomputed payoff in every scenario to 3e-15
   of the sum assured for all three funds, and the Monte Carlo means are within 1.11 SE of
   the closed form for `CASH` and `BOND_10Y` (Appendix A). `result_tvog()` takes about
@@ -494,9 +502,9 @@ points build up account values far above the sum assured, so their GMAB cost is 
   variates, odd N).
 - **Speed:** with 1,000 scenarios × 600 months, the main outputs take about 0.5 s and
   `Validation.summary()` about 0.6 s.
-- **Notebooks:** `notebooks/g2pp_scenarios.ipynb` shows the inputs, fan charts of short
+- **Notebooks:** `g2pp-simulation.ipynb` shows the inputs, fan charts of short
   rates and 10-year yields, the martingale check, yield distributions, the bond fund and
-  the Validation summary. `notebooks/tvog_example.ipynb` shows the model points, the TVOG
+  the Validation summary. `g2pp-tvog.ipynb` shows the model points, the TVOG
   on the delivered input, and the GMAB TVOG by fund against the closed form.
 
 ## 10. Risks and mitigations
