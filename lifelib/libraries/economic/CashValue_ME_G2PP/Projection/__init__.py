@@ -6,7 +6,7 @@
 """The main Space of CashValue_ME_G2PP: CashValue_ME_EX4 driven by G2++ scenarios.
 
 This space is lifelib's CashValue_ME_EX4 Projection space with its economic inputs taken
-from the space ESG, a copy of BasicG2PP's G2PP space:
+from the space ESG, a copy of the :mod:`~economic.BasicG2PP.G2PP` space of BasicG2PP:
 
 * :func:`scen_index` is ESG's: scen_id 0 is the certainty-equivalent (CE) scenario and
   1 to N are stochastic, so :func:`model_point` repeats every model point N+1 times.
@@ -36,9 +36,10 @@ the global variable ``Projection`` refers to the
 
 Attributes:
 
-    esg: The ESG space, a copy of BasicG2PP's G2PP space. It reads ``g2pp_input.xlsx``
-        next to the model folder and supplies :func:`scen_index`, the fund returns of
-        :func:`inv_return_table` and the deflators of :func:`disc_factors`.
+    esg: The ESG space, a copy of the :mod:`~economic.BasicG2PP.G2PP` space of
+        BasicG2PP. It reads ``g2pp_input.xlsx`` next to the model folder and supplies
+        :func:`scen_index`, the fund returns of :func:`inv_return_table` and the
+        deflators of :func:`disc_factors`.
 
     model_point_table: All model points as a DataFrame.
         By default, 4 model points are defined.

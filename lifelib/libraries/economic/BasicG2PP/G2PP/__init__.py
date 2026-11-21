@@ -450,7 +450,8 @@ def Var_rt():
 def fund_logvar(j):
     r"""Variance :math:`s^2` of :math:`\ln(AV(t_j)/AV_0)` for the selected fund
 
-    Used by the closed-form GMAB value (PLAN.md section 4). For an all-cash fund,
+    Used by the closed-form GMAB value of CashValue_ME_G2PP,
+    :func:`~economic.CashValue_ME_G2PP.Projection.formula_gmab_g2pp`. For an all-cash fund,
     :math:`AV(t_j)/AV_0 = 1/D(t_j)` and :math:`s^2 = V(0, t_j)`. For a fund that holds a
     single maturity :math:`\tau`, the monthly log return is linear in :math:`x` and
     :math:`y` (see :func:`zcb_return_mth`), and :math:`s^2` follows from a covariance

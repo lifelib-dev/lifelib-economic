@@ -7,7 +7,7 @@
 
 Generates risk-neutral monthly scenarios from the two-additive-factor Gaussian model G2++,
 fitted exactly to an initial curve, with all inputs read at run time from the Excel file
-``g2pp_input.xlsx`` next to the model folder. See the :mod:`~BasicG2PP.G2PP` space.
+``g2pp_input.xlsx`` next to the model folder. See the :mod:`~economic.BasicG2PP.G2PP` space.
 """
 
 from modelx.serialize.jsonvalues import *
