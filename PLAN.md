@@ -1,6 +1,6 @@
 # Plan: G2++ economic scenario generator (modelx) for lifelib TVOG
 
-*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9). Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), whose step A has moved the files to the library's path in lifelib. Every open question is decided (§11).*
+*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9). Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), whose steps A and B have moved the files to the library's path in lifelib and adapted them to it. Every open question is decided (§11).*
 
 ## 1. Goal and scope
 
@@ -485,8 +485,8 @@ points build up account values far above the sum assured, so their GMAB cost is 
 | 5. Into lifelib | `BasicG2PP` and `CashValue_ME_G2PP` in lifelib's `economic` library, next to `BasicHullWhite`: drafted here at the library's lifelib path, then merged (decided, §11; steps in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)) | `lifelib.create("economic", ...)` gives both models |
 | 6. Later, optional | space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
 
-**Status, 2026-11-21**: Phases 0–4 are done, and Phase 5 has started: step A of
-[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) is done.
+**Status, 2026-11-21**: Phases 0–4 are done, and Phase 5 has started: steps A and B of
+[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) are done.
 
 - **Tests:** 107 tests run in about 24 s: 5 on the workbook, 21 on the reference
   implementation, 41 on the model, 6 on the Validation space, 16 on `CashValue_ME_G2PP`

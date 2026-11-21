@@ -10,10 +10,12 @@ design is in [PLAN.md](PLAN.md), and the plan for the merge in
 implementation, the `BasicG2PP` model with its `G2PP` and `Validation` spaces, the
 statistical tests, and the TVOG example `CashValue_ME_G2PP`, lifelib's
 `savings/CashValue_ME_EX4` driven by the G2++ scenarios. Two notebooks show the
-scenarios and the TVOG. Phase 5 brings all of this into lifelib, and its step A is done:
-the files now sit at `lifelib/libraries/economic/`, the library's path in lifelib, next to
-a copy of lifelib's own library. The next steps adapt their contents, draft the docs pages
-and merge the library into lifelib. Phase 6 lists optional extensions.
+scenarios and the TVOG. Phase 5 brings all of this into lifelib, and its steps A and B
+are done: the files now sit at `lifelib/libraries/economic/`, the library's path in
+lifelib, next to a copy of lifelib's own library, and are adapted to it, with docstring
+links to lifelib's docs, lifelib's Colab cell in the notebooks and two gallery scripts.
+The next steps draft the docs pages and merge the library into lifelib. Phase 6 lists
+optional extensions.
 
 ## Layout
 

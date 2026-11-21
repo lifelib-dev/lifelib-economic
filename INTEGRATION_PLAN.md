@@ -4,8 +4,8 @@
 lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follows decision 6
 in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). lifelib's
 `main` has since moved on to d17cfb7, with the fixes for #182 and #183, but nothing has
-changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Step A was done
-on 2026-11-21 (§8).*
+changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Steps A and B
+were done on 2026-11-21 (§8).*
 
 ## 1. Goal
 
@@ -39,7 +39,7 @@ A survey of lifelib's `main`, and what each finding means for the draft:
 | Topic | lifelib convention | Consequence |
 |---|---|---|
 | Library layout | Model folders, notebooks and `plot_*.py` gallery scripts sit at the library root. `economic` holds `BasicHullWhite`, `hull-white-simulation.ipynb`, `plot_ex1` to `plot_ex3`, and `README.txt`, the heading of the library's gallery section. | `BasicG2PP/`, `CashValue_ME_G2PP/` and one `g2pp_input.xlsx` go to the library root. Both models find the workbook as `_model.path.parent / input_file`, so neither needs a change. `CashValue_ME_G2PP` keeps its tables in its own folder and needs nothing from `savings`. |
-| Packaging | `setup.py` ships every `.py`, `.ipynb`, `.xlsx`, `.json`, `.csv`, `.pickle` and `.md` file under `lifelib/libraries`, except dot-folders and `_research/`, which `MANIFEST.in` also prunes. | No packaging change. |
+| Packaging | `setup.py` ships every `.py`, `.ipynb`, `.xlsx`, `.json`, `.csv`, `.pickle` and `.md` file under `lifelib/libraries`, except dot-folders and `_research/`, which `MANIFEST.in` also prunes. | No packaging change. Every file the two models, the notebooks and the tests need is of a type that ships; only `README.txt`, the gallery heading, stays out, as it does now (checked in step B). |
 | Dependencies | `pyproject.toml` and `setup.py` both require only `modelx>=0.32`. The README and the FAQ say that lifelib installs nothing else, and leave pandas, numpy and openpyxl to the user. The `test` extra adds pytest, pandas, numpy and openpyxl. | Both models take the normal distribution from `scipy.stats`: `BasicG2PP`'s Validation space, and `formula_gmab_g2pp` in `CashValue_ME_G2PP`. Decision 1 makes scipy a dependency of lifelib. |
 | modelx format | `BasicHullWhite` is serializer 5. Our two models are serializer 8, which modelx writes from 0.32. PyPI has 0.33.0, and CI installs modelx `main`. | lifelib's minimum, modelx 0.32, reads them. Check this once in a clean environment with modelx 0.32. |
 | Tests | `testpaths` covers `lifelib/tests` and `lifelib/libraries/*/tests`. Seven libraries carry in-library suites, which `lifelib.create` copies with the library; `economic` has none yet. Shared names go in a uniquely named module such as `uk_registry.py`, because `conftest.py` and other common module names collide when several suites run together. The options include `--strict-markers` and `--strict-config`. The markers `slow`, `integration` and `unit` are registered, and slow tests run unless deselected with `-m "not slow"`. No repository-level test lists `economic`'s files. | Our suite becomes `economic/tests/`. Rename `helpers.py` to `g2pp_registry.py`, give the test modules names of their own, and keep only fixtures in `conftest.py`. Replace our `--runslow` option with the `slow` marker. This repository's `pytest.ini` copies lifelib's options, so the suite runs here as it will in lifelib. |
@@ -152,8 +152,9 @@ Made on 2026-11-21, after the four in §1.
 **In `BasicG2PP`**
 
 - **Docstring links**: the model docstring links `:mod:`~BasicG2PP.G2PP``, which becomes
-  `:mod:`~economic.BasicG2PP.G2PP``. `fund_logvar` cites "PLAN.md section 4"; that becomes
-  a reference to the docs page (§7).
+  `:mod:`~economic.BasicG2PP.G2PP``. `fund_logvar` cites "PLAN.md section 4" for the
+  closed-form GMAB value; it links instead to `formula_gmab_g2pp`, whose docstring gives
+  that formula.
 
 **In `CashValue_ME_G2PP`**
 
@@ -181,7 +182,8 @@ both models.
   `hull-white-simulation.ipynb`, with `lib = 'economic'`.
 - **Text**: replace mentions of "the project folder" and of this repository's tests with
   the library folder and the library's suite.
-- **Outputs**: re-run both notebooks, so their saved outputs come from the moved models.
+- **Outputs**: re-run both notebooks, so their saved outputs come from the moved models,
+  without the run times that nbconvert stores in each cell by default.
 
 **In the tests**
 
@@ -205,7 +207,8 @@ both models.
 
 **Design note** (step C): `_research/g2pp_design.md` holds PLAN.md's design sections and
 decisions, with a note that it records the design and that the model folders are the
-source of truth.
+source of truth. The tests' docstrings cite PLAN.md's sections and phases; they then cite
+the design note instead.
 
 ## 7. Documentation
 
@@ -273,10 +276,18 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
 | E. Release | Merge; release v0.17.4 with the release notes; move the `current` tag, so the Colab badges open the new notebooks. | `pip install lifelib --upgrade` then `lifelib.create("economic", ...)` gives the three models |
 | F. Afterwards | Replace the base here with lifelib's library at the merge commit (decision 6), so the next round starts from what was released. Its pages are MyST by then, so later rounds need no rewrite. | this repository's library equals lifelib's on `main` |
 
-**Done**: step A, on 2026-11-21. The base is e292f34, the MyST rewrite 5ead21b and the
-move 096e189. Every blob of the base equals lifelib's at d44068e. With lifelib's options,
-106 tests pass and the curve test skips, in about 24 s. Both notebooks run from the
-library folder and reproduce their saved outputs.
+**Done**
+
+- Step A, on 2026-11-21. The base is e292f34, the MyST rewrite 5ead21b and the move
+  096e189. Every blob of the base equals lifelib's at d44068e. With lifelib's options, 106
+  tests pass and the curve test skips, in about 24 s. Both notebooks run from the library
+  folder and reproduce their saved outputs.
+- Step B, on 2026-11-21, in d570680 (docstring links), 6303897 (Notes sheet), e81d43f
+  (gallery scripts) and 242fc46 (notebooks). The suite gives the same result here, in a
+  copy of the library made of the files lifelib ships, and with modelx 0.32.0 in a clean
+  conda environment (Python 3.12, pandas 3.1). The re-run notebooks reproduce their
+  outputs. BasicHullWhite's docstrings are unchanged, so the cross-check keeps its
+  warning filter (§6).
 
 ## 9. Risks
 
@@ -290,5 +301,5 @@ library folder and reproduce their saved outputs.
 | Sphinx autodoc imports each space's `__init__.py` as a Python module, and our files contain `("IOSpec", 1)` and `("Interface", ...)` References. | Other lifelib models carry similar References; step D's build checks it. |
 | nbsphinx executes notebooks that have no outputs, which would make the docs build slow. | Both notebooks are committed with outputs. |
 | The slow tests peak near 1 GB on each of 15 CI jobs. | They take about 5 s; if a runner runs short of memory, CI can deselect them with `-m "not slow"`. |
-| lifelib's minimum modelx is 0.32, and our models were written by 0.33. | Step B reads and runs them with modelx 0.32. |
+| lifelib's minimum modelx is 0.32, and our models were written by 0.33. | In step B, the whole suite passed with modelx 0.32.0 in a clean environment. |
 | A user who creates only `economic` lacks appliedlife's curve file. | The one test that reads it skips; both models need nothing outside the library. |
