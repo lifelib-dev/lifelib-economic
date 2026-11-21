@@ -14,7 +14,7 @@ import pytest
 from modelx.core.errors import FormulaError
 from scipy import stats
 
-from helpers import INPUT, MODEL_DIR, ROOT, write_workbook
+from g2pp_registry import INPUT, MODEL_DIR, ROOT, write_workbook
 
 CV_DIR = ROOT / "CashValue_ME_G2PP"
 SINGLE, LEVEL = [1, 2, 5, 6, 9], [3, 4, 7, 8]

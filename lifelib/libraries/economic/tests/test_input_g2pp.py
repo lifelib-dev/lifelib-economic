@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 
-from helpers import INPUT, lifelib_path
+from g2pp_registry import INPUT, sibling_library_path
 
 PARAM_TYPES = {
     "a": float, "b": float, "sigma": float, "eta": float, "rho": float,
@@ -33,7 +33,7 @@ def test_curve_layout():
 
 
 def test_curve_matches_appliedlife_source():
-    source = lifelib_path("appliedlife", "economic_data", "risk_free_202312.xlsx")
+    source = sibling_library_path("appliedlife", "economic_data", "risk_free_202312.xlsx")
     curve = pd.read_excel(INPUT, sheet_name="Curve", index_col="maturity")
     for scen in ("BASE", "UP", "DOWN"):
         src = pd.read_excel(source, sheet_name=scen, index_col=0)

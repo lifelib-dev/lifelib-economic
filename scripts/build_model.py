@@ -20,8 +20,8 @@ import modelx as mx
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "BasicG2PP"
+LIBRARY = Path(__file__).resolve().parents[1] / "lifelib" / "libraries" / "economic"
+TARGET = LIBRARY / "BasicG2PP"
 
 MODEL_DOC = """G2++ interest rate scenario generator for TVOG calculations with lifelib.
 

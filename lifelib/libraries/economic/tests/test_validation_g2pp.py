@@ -2,7 +2,7 @@
 
 The fast tests check the space itself. The tests marked slow run the statistical checks
 with 10,000 antithetic scenarios over 50 years, and with 2,000 scenarios over 150 years.
-Run them with ``python -m pytest --runslow``.
+They run by default; ``-m "not slow"`` leaves them out.
 
 A test with m z-scores passes if its largest |z| is below Phi^-1(1 - 0.00135/m): the same
 chance of a false alarm as a single 3-sigma check, and a limit of 3 when m = 1.
@@ -15,7 +15,7 @@ import pandas as pd
 import pytest
 from scipy import stats
 
-from helpers import INPUT, MODEL_DIR, write_workbook
+from g2pp_registry import INPUT, MODEL_DIR, write_workbook
 
 VALIDATION_CELLS = {"martingale_test", "fund_martingale_test", "curve_fit_test",
                     "zcb_martingale_test", "moments_test", "zbp_cf", "zbp_mc",

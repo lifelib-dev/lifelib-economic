@@ -1,21 +1,27 @@
-"""Paths and helpers shared by the tests."""
+"""Paths and helpers shared by the tests of the G2++ models.
+
+Every path is found from this library's folder, so the tests run on the models next to
+them, in lifelib or in a copy made by ``lifelib.create``. The module's name is unique
+among lifelib's test folders, because pytest imports the test folders of all libraries
+into one session.
+"""
 from pathlib import Path
 
 import pandas as pd
 import pytest
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[1]      # the library folder
 INPUT = ROOT / "g2pp_input.xlsx"
 MODEL_DIR = ROOT / "BasicG2PP"
 
 
-def lifelib_path(*parts):
-    """Path of a file or folder in lifelib's ``libraries`` folder; skip if unavailable."""
-    try:
-        import lifelib
-    except ImportError:
-        pytest.skip("lifelib is not installed")
-    path = Path(lifelib.__file__).parent / "libraries" / Path(*parts)
+def sibling_library_path(*parts):
+    """Path of a file or folder in another lifelib library; skip if it is not there.
+
+    In lifelib the libraries are folders next to each other, so the path is found next to
+    this library's folder. A copy made by ``lifelib.create`` holds this library alone.
+    """
+    path = ROOT.parent.joinpath(*parts)
     if not path.exists():
         pytest.skip(f"{path} not found")
     return path

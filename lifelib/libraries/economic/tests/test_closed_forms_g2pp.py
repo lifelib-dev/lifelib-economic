@@ -8,7 +8,7 @@ import numpy as np
 import pytest
 from scipy import integrate
 
-from helpers import INPUT
+from g2pp_registry import INPUT
 from reference_g2pp import DT, ReferenceG2PP, read_inputs
 
 PARAMS = dict(a=0.773, b=0.082, sigma=0.022, eta=0.0104, rho=-0.7)

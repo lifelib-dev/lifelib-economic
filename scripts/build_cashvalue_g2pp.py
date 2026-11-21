@@ -27,8 +27,8 @@ from pathlib import Path
 
 import modelx as mx
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "CashValue_ME_G2PP"
+LIBRARY = Path(__file__).resolve().parents[1] / "lifelib" / "libraries" / "economic"
+TARGET = LIBRARY / "CashValue_ME_G2PP"
 DROP_CELLS = ["std_norm_rand", "disc_rate_mth", "formula_option_put"]
 DROP_REFS = ["scen_size", "scen_id", "disc_rate_ann"]
 
@@ -213,7 +213,7 @@ def projection_doc(doc):
 
 def build(source):
     model = mx.read_model(source, name="CashValue_ME_G2PP")
-    g2pp_model = mx.read_model(ROOT / "BasicG2PP", name="BasicG2PP_source")
+    g2pp_model = mx.read_model(LIBRARY / "BasicG2PP", name="BasicG2PP_source")
     esg = g2pp_model.G2PP.copy(model, "ESG")
     esg.t_.doc = g2pp_model.G2PP.t_.doc or "Time t_i = i/12 in years of month i"
     g2pp_model.close()

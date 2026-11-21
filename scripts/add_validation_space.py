@@ -25,9 +25,9 @@ import numpy as np
 import pandas as pd
 import scipy.stats
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "BasicG2PP"
-BACKUP = ROOT / "BasicG2PP_BAK1"
+LIBRARY = Path(__file__).resolve().parents[1] / "lifelib" / "libraries" / "economic"
+TARGET = LIBRARY / "BasicG2PP"
+BACKUP = LIBRARY / "BasicG2PP_BAK1"
 
 MCSTATS_SOURCE = '''"""Monte Carlo summary statistics for the Validation space of BasicG2PP.
 

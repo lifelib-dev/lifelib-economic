@@ -16,8 +16,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[1]
-TARGET = ROOT / "g2pp_input.xlsx"
+LIBRARY = Path(__file__).resolve().parents[1] / "lifelib" / "libraries" / "economic"
+TARGET = LIBRARY / "g2pp_input.xlsx"
 
 PARAMS = [
     ("a", 0.773, "mean reversion of x, > 0"),

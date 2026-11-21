@@ -2,21 +2,7 @@ import uuid
 
 import pytest
 
-from helpers import MODEL_DIR, write_workbook
-
-
-def pytest_addoption(parser):
-    parser.addoption("--runslow", action="store_true", default=False,
-                     help="also run the slow statistical tests")
-
-
-def pytest_collection_modifyitems(config, items):
-    if config.getoption("--runslow"):
-        return
-    skip = pytest.mark.skip(reason="slow statistical test; run with --runslow")
-    for item in items:
-        if "slow" in item.keywords:
-            item.add_marker(skip)
+from g2pp_registry import MODEL_DIR, write_workbook
 
 
 @pytest.fixture

@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 from modelx.core.errors import FormulaError
 
-from helpers import INPUT, lifelib_path, write_workbook
+from g2pp_registry import INPUT, ROOT, write_workbook
 from reference_g2pp import ReferenceG2PP, read_inputs
 
 RTOL, ATOL = 1e-12, 1e-15
@@ -235,13 +235,13 @@ def test_unknown_fund_id(model, workbook):
         g.fund_bond_shares()
 
 
-# ---- cross-check against lifelib's BasicHullWhite ----------------------------------
+# ---- cross-check against BasicHullWhite, next to BasicG2PP in the library ----------
 
 # BasicHullWhite's docstrings contain LaTeX escapes such as "\{" in non-raw strings,
 # which Python reports as SyntaxWarning when modelx reads the model.
 @pytest.mark.filterwarnings("ignore::SyntaxWarning")
 def test_eta_zero_matches_basic_hull_white(model, workbook):
-    hw = mx.read_model(lifelib_path("economic", "BasicHullWhite"),
+    hw = mx.read_model(ROOT / "BasicHullWhite",
                        name=f"BasicHullWhite_{uuid.uuid4().hex[:8]}")
     try:
         h = hw.HullWhite
