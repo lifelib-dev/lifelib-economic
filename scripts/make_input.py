@@ -43,8 +43,9 @@ FUNDS = pd.DataFrame({
 })
 
 NOTES = [
-    "Input to the BasicG2PP model (G2++ interest rate scenario generator). The model reads "
-    "this file at run time. After editing it in place, call model.clear_all().",
+    "Input to BasicG2PP, the G2++ interest rate scenario generator, and to the ESG space of "
+    "CashValue_ME_G2PP, a copy of BasicG2PP's G2PP space. Both models read this file at run "
+    "time. After editing it in place, call clear_all() on each model that has read it.",
     "Params: G2++ parameters and run settings. The example G2++ parameters are illustrative "
     "only; replace them with calibrated values.",
     "Curve: spot rates by maturity in years, one column per curve ID, compounded as set by "
