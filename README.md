@@ -3,18 +3,21 @@
 A draft of lifelib's `economic` library, kept here until it is merged into lifelib. So far
 it holds a G2++ interest rate scenario generator built as a modelx model, for calculating
 the time value of options and guarantees (TVOG) of lifelib insurance liabilities. The
-design is in [PLAN.md](PLAN.md), and the plan for the merge in
+design is in the library's
+[design note](lifelib/libraries/economic/_research/g2pp_design.md), made from
+[PLAN.md](PLAN.md), and the plan for the merge in
 [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md).
 
 **Status:** Phases 0–4 of the plan are done: the input workbook, a pure-numpy reference
 implementation, the `BasicG2PP` model with its `G2PP` and `Validation` spaces, the
 statistical tests, and the TVOG example `CashValue_ME_G2PP`, lifelib's
 `savings/CashValue_ME_EX4` driven by the G2++ scenarios. Two notebooks show the
-scenarios and the TVOG. Phase 5 brings all of this into lifelib, and its steps A and B
+scenarios and the TVOG. Phase 5 brings all of this into lifelib, and its steps A to C
 are done: the files now sit at `lifelib/libraries/economic/`, the library's path in
 lifelib, next to a copy of lifelib's own library, and are adapted to it, with docstring
 links to lifelib's docs, lifelib's Colab cell in the notebooks and two gallery scripts.
-The next steps draft the docs pages and merge the library into lifelib. Phase 6 lists
+The docs pages of both models are drafted in MyST, and the design is kept in a note in
+the library. The next steps merge the library into lifelib and release it. Phase 6 lists
 optional extensions.
 
 ## Layout
@@ -37,7 +40,12 @@ In `lifelib/libraries/economic/`:
 | `g2pp-tvog.ipynb` | model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
 | `plot_ex4_g2pp_rate_fan.py`, `plot_ex5_g2pp_martingale.py` | scripts for the gallery in lifelib's docs: fan charts of the short rate and the 10-year yield, and the martingale tests |
 | `tests/` | the library's pytest suite, with `g2pp_registry.py` (paths and helpers) and `reference_g2pp.py`, a pure-numpy reference implementation |
+| `_research/g2pp_design.md` | the design note: PLAN.md without the parts that concern only the drafting. Like delib's research notes, it stays out of lifelib's distributions |
 | `BasicHullWhite/`, `hull-white-simulation.ipynb`, `plot_ex1_*.py` to `plot_ex3_*.py`, `README.txt` | lifelib's own library, unchanged |
+
+In `doc/source/libraries/economic/`, the pages are MyST Markdown: `index.md`, the library's
+page, and one page per model, `BasicHullWhite.md`, `BasicG2PP.md` and
+`CashValue_ME_G2PP.md`. The `.nblink` files link the notebooks into the docs.
 
 At the root, staying here:
 
@@ -48,7 +56,7 @@ At the root, staying here:
 | `scripts/add_validation_space.py` | adds the `Validation` space to the written model (bootstrap only) |
 | `scripts/build_cashvalue_g2pp.py` | builds `CashValue_ME_G2PP/` from lifelib's EX4 and `G2PP` (bootstrap only) |
 | `pytest.ini`, `.gitattributes` | lifelib's pytest options and line-ending rules, so the suite and the files behave as in lifelib |
-| `PLAN.md`, `INTEGRATION_PLAN.md` | the design, and the plan for the merge |
+| `PLAN.md`, `INTEGRATION_PLAN.md` | the plan the models were drafted from, whose design parts became the design note, and the plan for the merge |
 
 After the first build, edit the model folders (directly or in Spyder-modelx) and
 `g2pp_input.xlsx` themselves. The scripts are not kept in sync, and they refuse to

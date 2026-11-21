@@ -1,6 +1,6 @@
 # Plan: G2++ economic scenario generator (modelx) for lifelib TVOG
 
-*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9). Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), whose steps A and B have moved the files to the library's path in lifelib and adapted them to it. Every open question is decided (§11).*
+*Draft for review, 2026-11-20. Updated the same day with the answers to open questions 1–4 (§11), and on 2026-11-21 with a bond fund for the TVOG example. Phases 0–4 are implemented (§9). Phase 5, the move into lifelib, is planned in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md), whose steps A to C have moved the files to the library's path in lifelib, adapted them to it and drafted the docs pages. Step C also made the design note [`_research/g2pp_design.md`](lifelib/libraries/economic/_research/g2pp_design.md) from this plan; the note is the copy of the design to keep up to date. Every open question is decided (§11).*
 
 ## 1. Goal and scope
 
@@ -267,6 +267,7 @@ lifelib-economic/
 │   ├── CashValue_ME_G2PP/           TVOG example: savings/CashValue_ME_EX4 plus a copy of G2PP
 │   ├── g2pp-simulation.ipynb, g2pp-tvog.ipynb
 │   ├── tests/                       pytest: pure-numpy reference implementation and tests
+│   ├── _research/g2pp_design.md     the design note, made from this plan
 │   └── BasicHullWhite/ and the rest of lifelib's own library
 ├── doc/source/libraries/economic/   the library's docs pages, in MyST
 ├── scripts/make_input.py            creates g2pp_input.xlsx from appliedlife's curves (bootstrap only)
@@ -485,7 +486,7 @@ points build up account values far above the sum assured, so their GMAB cost is 
 | 5. Into lifelib | `BasicG2PP` and `CashValue_ME_G2PP` in lifelib's `economic` library, next to `BasicHullWhite`: drafted here at the library's lifelib path, then merged (decided, §11; steps in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)) | `lifelib.create("economic", ...)` gives both models |
 | 6. Later, optional | space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
 
-**Status, 2026-11-21**: Phases 0–4 are done, and Phase 5 has started: steps A and B of
+**Status, 2026-11-21**: Phases 0–4 are done, and Phase 5 has started: steps A to C of
 [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) are done.
 
 - **Tests:** 107 tests run in about 24 s: 5 on the workbook, 21 on the reference

@@ -4,7 +4,7 @@
 lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follows decision 6
 in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). lifelib's
 `main` has since moved on to d17cfb7, with the fixes for #182 and #183, but nothing has
-changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Steps A and B
+changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Steps A to C
 were done on 2026-11-21 (§8).*
 
 ## 1. Goal
@@ -167,7 +167,9 @@ Made on 2026-11-21, after the four in §1.
   changed `G2PP`, so that `test_structure` still passes.
 - **Upstream fixes**: lifelib fixed #182 and #183 on `main` after v0.17.3 (01e0561 and
   f89a631), and both issues are closed. Nothing needs carrying over: `CashValue_ME_G2PP`
-  has its own `check_pv_net_cf` and no `formula_option_put`.
+  has its own `check_pv_net_cf` and no `formula_option_put`. Two of its docstrings said
+  that EX4's `check_pv_net_cf` fails, which stops being true once v0.17.4 ships the fix;
+  step C rewrote them, and removed a stale link to `scen_id` from `inv_return_mth`'s.
 
 **In the workbook**: the Notes sheet says "Input to the BasicG2PP model"; it should name
 both models.
@@ -207,8 +209,9 @@ both models.
 
 **Design note** (step C): `_research/g2pp_design.md` holds PLAN.md's design sections and
 decisions, with a note that it records the design and that the model folders are the
-source of truth. The tests' docstrings cite PLAN.md's sections and phases; they then cite
-the design note instead.
+source of truth. The tests' docstrings cited PLAN.md's sections and phases; they now cite
+the design note's sections, which keep PLAN.md's numbers, with the optional extensions in
+§9 in place of the phases.
 
 ## 7. Documentation
 
@@ -262,6 +265,16 @@ built with Sphinx 8.2.3 and myst-parser 5.1.0 beside the RST originals, rendered
 text and the same links, with no warnings. The module index listed `economic` and
 `economic.BasicHullWhite`, and an RST toctree entry `economic/index.rst` found `index.md`.
 
+**Trial of step C, 2026-11-21**: the draft's library and pages were built with lifelib's
+Sphinx settings and extensions, including nbsphinx and sphinx-gallery but not the theme,
+with placeholder pages for the `savings` and `appliedlife` pages that the new pages link
+to. The build gave no warning except the `config.cache` warning that lifelib's
+`sphinx_gallery_conf` causes in any build. It generated the autosummary pages of `G2PP`,
+`Validation`, `Projection` and `HullWhite`, both notebook pages and the five gallery pages,
+whose scripts ran. A nitpicky build found no unresolved link on the three pages; its other
+notes come from docstrings, mostly links to `savings` pages that exist only in lifelib.
+All 61 formulas on the pages parse.
+
 ## 8. Steps
 
 Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branch
@@ -288,6 +301,13 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
   conda environment (Python 3.12, pandas 3.1). The re-run notebooks reproduce their
   outputs. BasicHullWhite's docstrings are unchanged, so the cross-check keeps its
   warning filter (§6).
+- Step C, on 2026-11-21, in f972513 (`CashValue_ME_G2PP`'s docstrings), 398863d (the two
+  model pages), 1d809cc (the index page and the notebook links) and 9908760 (the design
+  note and the tests' citations). `index.md` lists the three models, the three notebooks
+  and the five gallery scripts. The new pages cover the four spaces: `G2PP`, `Validation`
+  and `Projection` by autosummary, and `ESG` by a pointer to the `G2PP` page. The trial
+  build is in §7, and the suite gives the same result as after step B. The design note
+  stays out of the files lifelib ships, which are otherwise unchanged.
 
 ## 9. Risks
 
@@ -296,9 +316,9 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
 | `CashValue_ME_G2PP`'s `ESG` and `BasicG2PP`'s `G2PP` drift apart. | `test_structure` compares every formula, and runs in lifelib's CI with the rest of the library's suite (decision 2). |
 | lifelib's `economic` files change while the draft is open. | The base commit names lifelib's commit. Step D's diff finds any change, and the patch applies here because the paths match; a change to the two RST pages is ported by hand to their `.md` pages. |
 | `import lifelib` in this repository finds the root `lifelib/` folder instead of the installed lifelib. | The tests use sibling folders, and the scripts run as files with `--source` (§3). |
-| The docs pages can't be built here. | Step D builds them in lifelib before the pull request (decision 4); the trial build checked the MyST conventions (§7). |
+| The docs pages can't be built here in full. | The trial builds of steps A and C built them with lifelib's settings and placeholder pages (§7); step D builds them in lifelib before the pull request (decision 4). |
 | The MyST pages render differently from the RST pages they replace. | The trial rendered both with the same text and links, and step D's build checks the final pages. |
-| Sphinx autodoc imports each space's `__init__.py` as a Python module, and our files contain `("IOSpec", 1)` and `("Interface", ...)` References. | Other lifelib models carry similar References; step D's build checks it. |
+| Sphinx autodoc imports each space's `__init__.py` as a Python module, and our files contain `("IOSpec", 1)` and `("Interface", ...)` References. | Step C's trial build imported and documented all four spaces without a warning; step D's build checks it in lifelib. |
 | nbsphinx executes notebooks that have no outputs, which would make the docs build slow. | Both notebooks are committed with outputs. |
 | The slow tests peak near 1 GB on each of 15 CI jobs. | They take about 5 s; if a runner runs short of memory, CI can deselect them with `-m "not slow"`. |
 | lifelib's minimum modelx is 0.32, and our models were written by 0.33. | In step B, the whole suite passed with modelx 0.32.0 in a clean environment. |
