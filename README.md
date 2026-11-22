@@ -129,7 +129,7 @@ has read.
 From the repository root, where `pytest.ini` holds lifelib's pytest options:
 
 ```
-python -m pytest                 # all 107 tests, about 24 s, peaking near 1 GB of memory
+python -m pytest                 # all 108 tests, about 24 s, peaking near 1 GB of memory
 python -m pytest -m "not slow"   # without the 18 statistical tests, about 20 s
 ```
 

@@ -491,10 +491,10 @@ points build up account values far above the sum assured, so their GMAB cost is 
 [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188) merged the
 library into lifelib's `main`; the release of lifelib v0.17.4 follows.
 
-- **Tests:** 107 tests run in about 24 s: 5 on the workbook, 21 on the reference
-  implementation, 41 on the model, 6 on the Validation space, 16 on `CashValue_ME_G2PP`
+- **Tests:** 108 tests run in about 24 s: 5 on the workbook, 21 on the reference
+  implementation, 41 on the model, 6 on the Validation space, 17 on `CashValue_ME_G2PP`
   and the 18 statistical tests, which `-m "not slow"` leaves out. In this repository one
-  workbook test skips, because appliedlife's curve file is only in lifelib; the other 106
+  workbook test skips, because appliedlife's curve file is only in lifelib; the other 107
   pass.
 - **TVOG example:** the GMAB cost equals the recomputed payoff in every scenario to 3e-15
   of the sum assured for all three funds, and the Monte Carlo means are within 1.11 SE of
