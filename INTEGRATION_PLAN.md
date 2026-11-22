@@ -2,10 +2,11 @@
 
 *Written 2026-11-21 and revised twice the same day: after this repository was renamed from
 lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follows decision 6
-in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). lifelib's
-`main` has since moved on to d17cfb7, with the fixes for #182 and #183, but nothing has
-changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`. Steps A to C
-were done on 2026-11-21, and step D's pull request is open (§8).*
+in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). When
+step D began, lifelib's `main` was at d17cfb7, with the fixes for #182 and #183, but
+nothing had changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`.
+Steps A to D are done, and step E began on 2026-11-22 with the merge of step D's pull
+request (§8).*
 
 ## 1. Goal
 
@@ -309,7 +310,7 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
   and `Projection` by autosummary, and `ESG` by a pointer to the `G2PP` page. The trial
   build is in §7, and the suite gives the same result as after step B. The design note
   stays out of the files lifelib ships, which are otherwise unchanged.
-- Step D, on 2026-11-21, up to the pull request; CI is pending. Nothing had changed in the
+- Step D, on 2026-11-21. CI passed on all 15 test jobs. Nothing had changed in the
   two folders in lifelib since the base. The branch `feature/economic-g2pp` starts from
   lifelib's `main` at d17cfb7 and holds 4190721 (scipy in `pyproject.toml`, `setup.py`,
   the README and the FAQ) and 0292f7e (the two folders restored from 8de1e1f, the
@@ -321,6 +322,9 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
   warnings of v0.17.3's build, and the economic pages, the generated pages, both notebook
   pages and both gallery pages render. The release notes move to step E (§7). Pull
   request: [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188).
+- Step E, begun on 2026-11-22. The pull request was merged as lifelib-dev/lifelib@29e4526;
+  `main` had not moved since d17cfb7, so the merge's tree is the one CI tested. Still to
+  do: release v0.17.4 with the release notes, and move the `current` tag.
 
 ## 9. Risks
 
