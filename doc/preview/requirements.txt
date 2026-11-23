@@ -1,0 +1,21 @@
+# Requirements of the docs preview (build.py): the Sphinx extensions and the theme that
+# lifelib's doc/source/conf.py loads, and what the space modules, the notebooks and the
+# gallery scripts need. Sphinx and the theme are pinned to the versions that built
+# lifelib.io's pages of lifelib v0.17.4, as their footers show, so the preview renders
+# as lifelib.io does. nbsphinx also needs pandoc, which pip doesn't install: get it from
+# conda (conda install pandoc) or from pandoc.org.
+sphinx==8.2.3
+pydata-sphinx-theme==0.17.1
+myst-parser
+nbsphinx
+nbsphinx-link
+sphinx-gallery
+sphinx-design
+sphinxcontrib-mermaid
+ipython
+matplotlib
+modelx
+numpy
+pandas
+scipy
+openpyxl
