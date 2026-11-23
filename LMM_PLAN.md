@@ -1,11 +1,13 @@
 # Plan: LMM economic scenario generator (modelx) for lifelib TVOG
 
 *Written 2026-11-23. The same day, its six open questions were decided as the draft
-proposed them (§11), and Phase 0 was done (§9). The plan follows the G2++ generator's plan
-([PLAN.md](PLAN.md), kept up to date as the design note
+proposed them (§11), and Phase 0 was done. Phases 1 to 4 and the part of Phase 5 that is
+drafted here followed on 2026-11-24 (§9), and the design is now kept in the design note
+[`lmm_design.md`](lifelib/libraries/economic/_research/lmm_design.md). The plan follows the
+G2++ generator's plan ([PLAN.md](PLAN.md), kept up to date as the design note
 [`g2pp_design.md`](lifelib/libraries/economic/_research/g2pp_design.md)) section by section,
-and says "as in `BasicG2PP`" where a piece carries over unchanged. The numbers come from a
-throwaway numpy prototype, reported in Appendix A.*
+and says "as in `BasicG2PP`" where a piece carries over unchanged. Most numbers come from a
+throwaway numpy prototype, reported in Appendix A; §6 gives those of the model.*
 
 ## 1. Goal and scope
 
@@ -66,7 +68,7 @@ What changes with the model, and shapes this plan:
 | Lower bound of rates | none | minus the shift |
 | Rates over long horizons | mean-reverting | can explode, unless volatility decays with time to expiry (§3, §10) |
 | Closed forms for tests | bond options, a call on the deflator, the GMAB for a cash or single-maturity fund | caplets; the GMAB only for a policy maturing at the second tenor date |
-| 1,000 scenarios × 600 months | 0.5 s, 60 MB | 1 s, 170 MB with annual forward rates; 19 s, 2 GB with monthly ones |
+| 1,000 scenarios × 600 months | 0.5 s, 60 MB | 1 s, 320 MB with annual forward rates; 10 s, 2.3 GB with monthly ones |
 
 ## 3. Key design decisions
 
@@ -76,8 +78,8 @@ What changes with the model, and shapes this plan:
    anniversary is a tenor date. All rates not yet set move in every monthly step. The
    example uses 12: annual forward rates match the annual swaptions that such generators
    are usually calibrated to, and they keep a 50-year run near `BasicG2PP`'s cost (§6).
-   With 1, the model is a monthly LMM with nothing to interpolate, at 12 times the memory
-   and 19 times the run time.
+   With 1, the model is a monthly LMM with nothing to interpolate, at about 7 times the
+   memory and 10 times the run time.
 2. **Shifted-lognormal rates.** F_k + α is lognormal under its forward measure (B&M §10.1),
    with α = `shift` ≥ 0. Rates stay above −α, caplets keep Black's formula with the rate and
    the strike shifted, and α = 0 is the lognormal LMM. Without a shift the model cannot
@@ -396,7 +398,7 @@ d = `factor_size()`, c = c(i))
 | | `mkt_fwd_rates()` | F_k(0) for k = 1..K; checks that each is above −α | `numpy.ndarray`, shape (K,) |
 | | `curve_adj(j)` | κ_j | `float` |
 | Volatility | `factor_size()` | d, the number of factor columns | `int` |
-| | `vol_loadings()` | λ(m) in row m, for m = 0..(K-1)p (row 0 is not used); checks that the table reaches | `numpy.ndarray`, shape ((K-1)p+1, d) |
+| | `vol_loadings()` | λ(m) in row m, for m = 0..(K-1)p (row 0, a rate at its expiry, is 0); checks that the table reaches | `numpy.ndarray`, shape ((K-1)p+1, d) |
 | | `caplet_vol(k)` | Black volatility of F_k + α, √(v_k²/T_{k-1}) | `float` |
 | Simulation | `std_norm_rand()` | standard normal draws, antithetic if set | `numpy.ndarray`, shape (n, N, d) |
 | | `fwd_rates(i)` | F_k(t_i) for k = c+1..K. Column 0 is the rate of the current tenor period, already set | `numpy.ndarray`, shape (N, K-c) |
@@ -431,36 +433,39 @@ pass rule of `BasicG2PP` (§8). References: `lmm` (an Interface to `LMM`), `np`,
 `stats` and `mcstats`.
 
 - `martingale_test()`, `fund_martingale_test()`, `curve_fit_test()` and
-  `zcb_martingale_test(i, j)`: as in `BasicG2PP`
+  `zcb_martingale_test(i, j)`: as in `BasicG2PP`. In the first tenor period the deflators
+  are known at time 0, so their z-scores are 0, in `curve_fit_test()` too
 - `caplet_cf(k, x)` and `caplet_mc(k, x)`: the closed form of §4, and its Monte Carlo
   estimate against it, for the caplet on F_k with strike x
 - `caplet_test()`: at-the-money caplets on the rates that expire at every whole year up to
   t_n. This takes the place of `moments_test()`, since rates have no closed-form moments
   under the spot-LIBOR measure
-- `swaption_vol(a, b)` and `swaption_test(a, b)`: the approximation of §4 and the Monte
-  Carlo price against it. A diagnostic, left out of `summary()`, because the formula is an
-  approximation
+- `fwd_swap(a, b)`, `swaption_vol(a, b)` and `swaption_test(a, b)`: the forward swap rate
+  and annuity, the approximation of §4, and the Monte Carlo price against it. A
+  diagnostic, left out of `summary()`, because the formula is an approximation
 - `summary()`: the largest |z| of each test against its limit
 
 **Conventions**: as in `BasicG2PP` (docstrings with LaTeX math in B&M notation; path cells
 assemble steps in increasing i).
 
-**Memory and run time.** The cached `fwd_rates` arrays hold 8 N Σ_i (K - c(i)) bytes. From
-the prototype, for 1,000 scenarios with `maturity_size` 120 and two factors:
+**Memory and run time.** The cached `fwd_rates` arrays hold 8 N Σ_i (K - c(i)) bytes, and
+the cached deflated bonds of every month add to them. Measured on `BasicLMM`'s main
+outputs, for 1,000 scenarios with `maturity_size` 120 and two factors (the runs with more
+forward rates were made with fewer scenarios and scaled):
 
-| `step_size` | `tenor_mth` | K | forward-rate arrays | run time |
+| `step_size` | `tenor_mth` | K | run time | peak memory |
 |---|---|---|---|---|
-| 600 | 12 | 60 | 170 MB | 1.0 s |
-| 600 | 6 | 120 | 340 MB | 2.2 s |
-| 600 | 3 | 240 | 675 MB | 5.7 s |
-| 600 | 1 | 720 | 2,020 MB | 18.5 s |
-| 120 | 12 | 20 | 15 MB | 0.1 s |
-| 120 | 1 | 240 | 175 MB | 1.6 s |
-| 1,680 | 12 | 150 | 1,080 MB | 7.7 s |
+| 600 | 12 | 60 | 1.0 s | 320 MB |
+| 600 | 6 | 120 | 2.1 s | 500 MB |
+| 600 | 3 | 240 | 4.1 s | 880 MB |
+| 600 | 1 | 720 | 10 s | 2.3 GB |
+| 120 | 12 | 20 | 0.2 s | 45 MB |
+| 120 | 1 | 240 | 1.1 s | 200 MB |
+| 1,680 | 12 | 150 | 9 s | 1.7 GB |
 
-The random numbers add 10 MB, and the other cells little. Memory grows with the square of
-the horizon, where `BasicG2PP`'s grows in proportion to it. So a monthly tenor suits
-horizons up to about 20 years, and a 140-year run needs fewer scenarios or more memory.
+Memory grows with the square of the horizon, where `BasicG2PP`'s grows in proportion to
+it. So a monthly tenor suits horizons up to about 20 years, and a 140-year run needs fewer
+scenarios or more memory.
 
 ## 7. Interface to liability models and the TVOG example
 
@@ -529,8 +534,8 @@ the money than under G2++, and a 10-year bond fund's more (Appendix A).
 
 **Statistical (marked slow; they run by default, and `-m "not slow"` leaves them out)**,
 with standard errors from antithetic pair means and the pass rule of `BasicG2PP`: a check
-with m z-scores passes if its largest |z| is below Φ⁻¹(1 - 0.00135/m). Each run is sized
-to stay under 600 MB.
+with m z-scores passes if its largest |z| is below Φ⁻¹(1 - 0.00135/m). The runs peak at
+385 to 850 MB.
 
 - 10,000 scenarios over 20 years, tenor 12: the martingale, fund martingale (`BOND_MIX`
   and `BOND_10Y`) and curve-fit tests at every month; E[D(t_i) P(t_i,t_j)] = P^M(0,t_j)
@@ -565,19 +570,46 @@ to stay under 600 MB.
 | 5. Into lifelib | the docs page `BasicLMM.md` in the form of `BasicG2PP.md`; `index.md` with three primary models, the two notebooks and the two gallery scripts; the `.nblink` files; `_research/lmm_design.md` made from this plan, which the tests cite in place of this plan; a clean `doc/preview` build. Then the merge by the route of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3: the two library folders restored on a lifelib branch, the notebooks added to lifelib's shared pages, release notes | `lifelib.create("economic", ...)` gives `BasicLMM` and `CashValue_ME_LMM` |
 | 6. Later, optional | a helper that makes a `Vol` table from parametric volatilities and correlations, with tables of the caplet and swaption volatilities it implies; a predictor-corrector step or a martingale discretisation as a setting; a martingale (moment-matching) adjustment; a cap on rates; volatilities that also depend on calendar time; a smile (CEV, stochastic volatility); separate discounting and forwarding curves; the optional extensions of `g2pp_design.md` §9, which apply here too | as needed |
 
-**Status, 2026-11-23**: Phase 0 is done.
+**Status, 2026-11-24**: Phases 0 to 4 are done, and so is the part of Phase 5 that is
+drafted here. The merge into lifelib remains. The design note
+[`_research/lmm_design.md`](lifelib/libraries/economic/_research/lmm_design.md), made from
+this plan, is the copy of the design to keep up to date.
 
-- **Workbook**: `scripts/make_input_lmm.py` wrote `lmm_input.xlsx` with the `Params` of §5,
-  the `Curve` and `Fund` sheets read from `g2pp_input.xlsx` (its `--source`), the example
-  `Vol` table and a `Notes` sheet, which carries the two warnings of §10 on the table.
-- **Tests**: `tests/lmm_registry.py` holds the paths and `write_workbook`, and
-  `conftest.py` the fixtures `lmm_workbook` and `lmm_model`, which skips until `BasicLMM`
-  is built. `tests/test_input_lmm.py` has 6 tests: the sheets, the types in `Params`, the
-  sheets shared with `g2pp_input.xlsx`, the example table against its formula, the example
-  run's needs against the curve, the table and the fund, and `write_workbook`. The whole
-  suite gives 113 passed and 1 skipped (the appliedlife curve test, as before) in about
-  23 s.
-- **README.md** lists the new files.
+- **Phase 0**, on 2026-11-23: `scripts/make_input_lmm.py` wrote `lmm_input.xlsx`, whose
+  `Curve` and `Fund` sheets are those of `g2pp_input.xlsx`, and whose `Notes` sheet
+  carries the two warnings of §10 on the volatility table. `tests/lmm_registry.py` holds
+  the paths and `write_workbook`, `conftest.py` the fixtures `lmm_workbook` and
+  `lmm_model`, and `test_input_lmm.py` 6 tests of the workbook.
+- **Phase 1**: `tests/reference_lmm.py`, and 26 tests of it in `test_closed_forms_lmm.py`.
+  With 40,000 scenarios over 10 years, caplets at 1, 5 and 10 years and three strikes
+  match Black's formula with a largest |z| of 1.51, and the GMAB at the second tenor date
+  matches the floorlet for tenors of 12, 6 and 1 month.
+- **Phase 2**: `scripts/build_lmm.py` wrote `BasicLMM` with its `LMM` space. It equals the
+  reference bit for bit on both input sets of §8; the tests allow 1e-10. 25 of its cells
+  have the code of `G2PP`'s, as `test_model_lmm.py` checks with its other 42 tests. The
+  main outputs take 1.0 s for the example run.
+- **Phase 3**: `scripts/add_validation_space_lmm.py` added the `Validation` space, with
+  `fwd_swap` beside the cells of §6. `test_validation_lmm.py` has 32 tests, of which the
+  22 statistical ones are marked slow. Their largest |z| is 2.95, against limits of 3.8
+  to 4.6. `lmm-simulation.ipynb` runs in about 11 s.
+- **Phase 4**: `scripts/build_cashvalue_lmm.py` wrote `CashValue_ME_LMM`, whose data files
+  are `CashValue_ME_G2PP`'s byte for byte. `test_cashvalue_me_lmm.py` has 16 tests: the GMAB
+  cost equals the payoff recomputed from the ESG paths in every scenario, and the floorlet
+  holds with 4,000 scenarios for tenors of 12 and 6 months. `lmm-tvog.ipynb` compares the
+  TVOG by fund with `CashValue_ME_G2PP`'s and by tenor, and checks the closed form, whose
+  z-scores are at most 0.34.
+- **Phase 5, drafted here**: the docs page `BasicLMM.md`; `index.md` with three primary
+  models, the two notebooks, `lmm_input.xlsx`, `CashValue_ME_LMM` and the gallery scripts
+  `plot_ex6_lmm_rate_fan.py` and `plot_ex7_lmm_caplet_vols.py`; the two `.nblink` files;
+  and the design note, which the tests now cite. `doc/preview` builds the pages without a
+  warning, nitpicky included, and in the browser no formula of the new pages is wider
+  than its column (the widest takes 604 of 725 px). Still to do, in lifelib, by the route
+  of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md): restore the two library folders on a
+  branch, add the notebooks to `banners.rst` and `notebooks.rst`, name the LMM in the
+  libraries table, and write the release notes.
+- **Tests**: the whole suite gives 230 passed and 1 skipped (the appliedlife curve test, as
+  before) in about 70 s; `-m "not slow"` leaves out 40 statistical tests, 22 of them the
+  LMM's, and takes about 55 s.
 
 The prototype of Appendix A is not in the repository. The merge of Phase 5 will also carry
 what this repository has changed since lifelib v0.17.4 and lifelib does not have yet
@@ -590,7 +622,7 @@ what this repository has changed since lifelib v0.17.4 and lifelib does not have
 | Rates explode over long horizons when volatility does not decay with time to expiry. With 10% for long expiries and a 2% shift, the 1-year rate at 50 years has a median of 8%, a 99th percentile of 350% and a mean of 29%, against a forward rate of 3.5% (Appendix A) | the example table decays, and gives a 99th percentile of 16% (decision 6); the notebook shows percentiles of rates next to the martingale tests, which pass even when rates explode; the docs page and the Notes sheet say what to look for; a cap on rates is a possible extension |
 | Monte Carlo noise grows with the horizon. With the example input and 1,000 antithetic scenarios, the 95% half-width of mean D/P^M is ±0.10% at 10 years, ±0.30% at 30, ±1.3% at 50, ±5% at 100 and ±9% at 140 | as for G2++: antithetic on; TVOG standard errors from pair means; scenario counts per horizon in the docs |
 | The monthly step is not exact, unlike G2++'s. With volatilities that explode, the bias of mean deflators reaches 2e-4 at 30 years | no bias is measurable with the example input (decision 4); the statistical tests would show one; a martingale discretisation and a predictor-corrector step are possible extensions |
-| Memory and run time grow with scenarios × months × rates: 2 GB and 19 s for 1,000 scenarios × 600 months with a monthly tenor | the example tenor is 12 months; §6's table goes to the docs page; the statistical tests are sized under 600 MB |
+| Memory and run time grow with scenarios × months × rates: 2.3 GB and 10 s for 1,000 scenarios × 600 months with a monthly tenor | the example tenor is 12 months; §6's table goes to the docs page; the statistical tests peak below 850 MB |
 | A volatility table fits one tenor. With the example table, the TVOG of a 10-year guarantee on a cash fund is 10% higher with tenor 1 than with tenor 12, because the bank account then follows the 1-month rate instead of the 1-year rate | the Notes sheet and the docs page say so; the notebook shows the TVOG by tenor |
 | With a tenor above one month, the bank-account return is fixed from the start of each tenor period, and bonds that mature within the period do not move | inherent to the interpolation; a shorter tenor where short maturities matter |
 | Rates cannot fall below −`shift`, so guarantees that pay when rates are low are worth less than under a Gaussian model with the same volatility at the money | choose the shift with the calibration; the notebook compares the two example models |
@@ -606,8 +638,8 @@ what this repository has changed since lifelib v0.17.4 and lifelib does not have
 
 1. **Tenor**: `tenor_mth` is a setting (1, 2, 3, 4, 6 or 12 months), with 12 in the
    example. Fixing it at 12 would leave no way to make the bank account follow a short
-   rate. Fixing it at 1 would remove the interpolation, but make a 50-year run cost 2 GB
-   and 19 s per 1,000 scenarios.
+   rate. Fixing it at 1 would remove the interpolation, but make a 50-year run cost 2.3 GB
+   and 10 s per 1,000 scenarios.
 2. **Volatility input**: a table of factor loadings by time to expiry, the `Vol` sheet. A
    few parameters in `Params` (a parametric volatility and correlation), with the rank
    reduction inside the model, would be shorter to enter. But the reduced factors would
@@ -689,7 +721,7 @@ at 10 years, 0.39 at 30 and 0.71 at 50, where the G2++ example has 0.11 at 10 an
 | a longer `step_size` or `maturity_size`, earlier months | equal to 1e-14; not bit for bit |
 | `JPY_DOWN` (first forward rate 0.02%), standard deviation of the 1-year rate at 10 years | 0.5% with no shift, 1.5% with 2% |
 
-Run times and memory are in §6.
+§6 gives the run times and memory of `BasicLMM` itself.
 
 **GMAB of the TVOG example**: T = 10 years, SA = 50M, 10,000 scenarios, standard errors from
 antithetic pair means. The columns are `CashValue_ME_G2PP`'s single-premium points, by
