@@ -29,8 +29,8 @@ optional extensions.
 The library lives where it will in lifelib: the models, the workbook, the notebooks and the
 tests in `lifelib/libraries/economic/`, and the docs pages in
 `doc/source/libraries/economic/`. Both folders started as a copy of lifelib's own
-`economic` library at v0.17.3, in commit e292f34, so `git diff e292f34 -- lifelib doc`
-shows what merging the draft will change in lifelib
+`economic` library at v0.17.3, in commit e292f34, so
+`git diff e292f34 -- lifelib doc/source` shows what merging the draft will change in lifelib
 ([INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3).
 
 In `lifelib/libraries/economic/`:
@@ -61,6 +61,7 @@ At the root, staying here:
 | `scripts/build_model.py` | creates `BasicG2PP/` with the `G2PP` space through the modelx API (bootstrap only) |
 | `scripts/add_validation_space.py` | adds the `Validation` space to the written model (bootstrap only) |
 | `scripts/build_cashvalue_g2pp.py` | builds `CashValue_ME_G2PP/` from lifelib's EX4 and `G2PP` (bootstrap only) |
+| `doc/preview/` | the [docs preview](#docs-preview): builds the pages with lifelib's Sphinx settings, to see how they render before the merge |
 | `pytest.ini`, `.gitattributes` | lifelib's pytest options and line-ending rules, so the suite and the files behave as in lifelib |
 | `PLAN.md`, `INTEGRATION_PLAN.md` | the plan the models were drafted from, whose design parts became the design note, and the plan for the merge |
 
@@ -151,6 +152,46 @@ mean against the closed form.
 The statistical tests run the Validation checks with 10,000 scenarios over 50 years and
 2,000 over 150 years. A check with m z-scores passes if its largest |z| is below
 Φ⁻¹(1 − 0.00135/m), the same chance of a false alarm as one 3-sigma check.
+
+## Docs preview
+
+`doc/preview/` builds the library's docs pages here, to see how they render before they
+go to lifelib. Its `conf.py` follows lifelib's `doc/source/conf.py`, and the folder holds
+copies of lifelib's autosummary template, stylesheet and logos. `requirements.txt` pins
+Sphinx and pydata-sphinx-theme to the versions that built lifelib.io. In an environment of
+its own:
+
+```
+pip install -r doc/preview/requirements.txt
+python doc/preview/build.py
+```
+
+nbsphinx also needs pandoc, which pip doesn't install (`conda install pandoc`). The first
+build takes about 15 s, as it runs the five gallery scripts, and later builds about 6 s.
+Then open `doc/preview/_build/html/libraries/economic/index.html`, or build with `--open`.
+`--clean` builds everything afresh, `--nitpicky` warns about every link that doesn't
+resolve, and other options go to sphinx-build, such as `-W --keep-going` to fail on
+warnings.
+
+`build.py` copies `doc/source/libraries/economic/` into `doc/preview/`, which stands in for
+lifelib's `doc/source/`, so the pages keep their names in lifelib and the `.nblink` paths
+work as they do there. Warnings name the pages in `doc/source/`, so edit those, not the
+copies. The notebooks and the gallery scripts are read from the library folder. What
+lifelib has and this build doesn't:
+
+- **The rest of lifelib's docs.** Links to it, such as those to `create-a-project` and
+  `appliedlife`, resolve to lifelib.io through intersphinx. lifelib.io also has the
+  economic library's pages as last released, and a link that only those resolve points to
+  something the draft has removed or renamed, so it warns (`ref.economic`) instead. So does
+  a link to an `economic.` name that neither the draft nor lifelib.io has, which lifelib's
+  build renders as plain text without a warning.
+- **The pages around the library.** Two stub pages, `doc/preview/index.rst` and
+  `doc/preview/libraries/index.rst`, put the library where it sits in lifelib's
+  navigation, and the gallery holds only this library's scripts.
+- **lifelib.io's analytics tags**, which lifelib's `_templates/layout.html` adds.
+
+`conf.py` marks the settings that differ from lifelib's with `Preview:`. When lifelib's
+`conf.py` changes, carry the change over.
 
 ## License
 

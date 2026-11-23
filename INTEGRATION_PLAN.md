@@ -63,6 +63,7 @@ lifelib-economic/
 │   ├── tests/
 │   └── _research/g2pp_design.md
 ├── doc/source/libraries/economic/   the library's docs pages, in MyST, merged into lifelib
+├── doc/preview/                     builds those pages with lifelib's Sphinx settings
 ├── scripts/                         bootstrap scripts
 ├── pytest.ini, .gitattributes       lifelib's settings, for running the suite here
 └── README.md, PLAN.md, INTEGRATION_PLAN.md, LICENSE, .gitignore
@@ -75,8 +76,8 @@ Everything outside the two library folders stays here.
   source commit: e292f34 here. Their blobs equal lifelib's.
 - **MyST rewrite**: a later commit of its own rewrites the two RST pages, `index.rst` and
   `BasicHullWhite.rst`, as `index.md` and `BasicHullWhite.md`, without changing what they
-  render (decision 7). From then on, `git diff <base> -- lifelib doc` shows exactly what the
-  pull request to lifelib will change.
+  render (decision 7). From then on, `git diff <base> -- lifelib doc/source` shows exactly
+  what the pull request to lifelib will change.
 - **Changes in lifelib meanwhile**: the library folder last changed in lifelib in December
   2023, and the docs folder in May 2026, when `makedocs/` became `doc/`. Before the merge,
   `git diff d44068e main -- lifelib/libraries/economic doc/source/libraries/economic` in
@@ -333,7 +334,7 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
 | `CashValue_ME_G2PP`'s `ESG` and `BasicG2PP`'s `G2PP` drift apart. | `test_structure` compares every formula, and runs in lifelib's CI with the rest of the library's suite (decision 2). |
 | lifelib's `economic` files change while the draft is open. | The base commit names lifelib's commit. Step D's diff finds any change, and the patch applies here because the paths match; a change to the two RST pages is ported by hand to their `.md` pages. |
 | `import lifelib` in this repository finds the root `lifelib/` folder instead of the installed lifelib. | The tests use sibling folders, and the scripts run as files with `--source` (§3). |
-| The docs pages can't be built here in full. | The trial builds of steps A and C built them with lifelib's settings and placeholder pages (§7); step D builds them in lifelib before the pull request (decision 4). |
+| The docs pages can't be built here in full. | The trial builds of steps A and C built them with lifelib's settings and placeholder pages (§7). Since 2026-11-23, `doc/preview/` builds them the same way, with links to the rest of lifelib's docs resolved to lifelib.io (README.md, "Docs preview"). Step D builds them in lifelib before the pull request (decision 4). |
 | The MyST pages render differently from the RST pages they replace. | The trial rendered both with the same text and links, and step D's build checks the final pages. |
 | Sphinx autodoc imports each space's `__init__.py` as a Python module, and our files contain `("IOSpec", 1)` and `("Interface", ...)` References. | Step C's trial build imported and documented all four spaces without a warning; step D's build checks it in lifelib. |
 | nbsphinx executes notebooks that have no outputs, which would make the docs build slow. | Both notebooks are committed with outputs. |

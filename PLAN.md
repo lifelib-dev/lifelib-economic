@@ -270,6 +270,7 @@ lifelib-economic/
 │   ├── _research/g2pp_design.md     the design note, made from this plan
 │   └── BasicHullWhite/ and the rest of lifelib's own library
 ├── doc/source/libraries/economic/   the library's docs pages, in MyST
+├── doc/preview/                     builds those pages with lifelib's Sphinx settings
 ├── scripts/make_input.py            creates g2pp_input.xlsx from appliedlife's curves (bootstrap only)
 ├── scripts/build_model.py           creates BasicG2PP through the modelx API (bootstrap only)
 ├── scripts/add_validation_space.py  adds the Validation space to BasicG2PP (bootstrap only)

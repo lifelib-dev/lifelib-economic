@@ -12,3 +12,10 @@ __pycache__/
 
 # Excel lock files while a workbook is open
 ~$*
+
+# The docs preview's copy of the pages, its generated pages and its output
+doc/preview/libraries/economic/
+doc/preview/libraries/generated/
+doc/preview/generated_examples/
+doc/preview/sg_execution_times.rst
+doc/preview/_build/
