@@ -18,6 +18,7 @@ _name = "BasicLMM"
 _allow_none = False
 
 _spaces = [
-    "LMM"
+    "LMM",
+    "Validation"
 ]
 
