@@ -1,7 +1,7 @@
 """Pure-numpy reference implementation of the LMM scenario generator.
 
-It implements section 4 of the plan of the LMM models, LMM_PLAN.md, without modelx. The
-tests run it with the same inputs and seed as BasicLMM and require the two to agree to
+It implements section 4 of the design note, ``_research/lmm_design.md``, without modelx.
+The tests run it with the same inputs and seed as BasicLMM and require the two to agree to
 1e-10.
 
 Notation follows Brigo and Mercurio (2nd ed. 2006), chapter 6, with the shift of their

@@ -1,8 +1,8 @@
 """CashValue_ME_LMM: lifelib's CashValue_ME_EX4 driven by an LMM ESG space.
 
-The integration tests of section 8 of the plan of the LMM models, LMM_PLAN.md, use EX4's
-single-premium model points 1, 2, 5, 6 and 9, which mature at month 120 with no fees or
-decrements. The level-premium points build up account values far above the sum assured,
+The integration tests of section 8 of the design note, ``_research/lmm_design.md``, use
+EX4's single-premium model points 1, 2, 5, 6 and 9, which mature at month 120 with no fees
+or decrements. The level-premium points build up account values far above the sum assured,
 so their GMAB cost is zero. For the closed form, the policies are made to mature at the
 second tenor date, where an all-cash fund makes the guarantee a floorlet.
 """

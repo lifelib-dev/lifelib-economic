@@ -1,7 +1,8 @@
-"""BasicLMM's Validation space, and the statistical tests of the plan of the LMM models.
+"""BasicLMM's Validation space, and the statistical tests of the library's design note.
 
 The fast tests check the space itself. The tests marked slow run the statistical checks of
-section 8 of the plan, LMM_PLAN.md: 10,000 antithetic scenarios over 20 years, 2,000 over
+section 8 of the design note, ``_research/lmm_design.md``: 10,000 antithetic scenarios over
+20 years, 2,000 over
 50 years and 500 over 140 years with annual forward rates, and 2,000 over 10 years with
 monthly ones. They run by default; ``-m "not slow"`` leaves them out.
 

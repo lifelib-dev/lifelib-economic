@@ -4,7 +4,7 @@ These tests check the reference itself, so that "the model equals the reference"
 (test_model_lmm.py) means the model is right. They cover the fit to the initial curve, the
 identities of the interpolated bonds, and the Monte Carlo against closed forms: caplets
 against Black's formula, and a maturity guarantee against the floorlet it equals. The
-specification is section 4 of the plan of the LMM models, LMM_PLAN.md.
+specification is section 4 of the design note, ``_research/lmm_design.md``.
 
 A check with m z-scores passes if its largest |z| is below Phi^-1(1 - 0.00135/m), the rule
 of the Validation spaces.

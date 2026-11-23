@@ -1,6 +1,6 @@
 """lmm_input.xlsx reads into pandas as specified.
 
-The specification is section 5 of the plan of the LMM models, LMM_PLAN.md.
+The specification is section 5 of the design note, ``_research/lmm_design.md``.
 """
 import numpy as np
 import pandas as pd

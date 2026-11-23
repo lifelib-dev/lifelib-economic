@@ -3,9 +3,9 @@
 The ``Curve`` and ``Fund`` sheets are copied from ``g2pp_input.xlsx``, the input of
 BasicG2PP, so that the two generators run on the same curves and funds. Those curves come
 from lifelib's ``appliedlife/economic_data/risk_free_202312.xlsx``, whose stated source is
-EIOPA. The ``Vol`` sheet is the example volatility table of LMM_PLAN.md section 5: two
-exponential factors with correlation -0.7, written as two independent ones and rounded to
-six decimals.
+EIOPA. The ``Vol`` sheet is the example volatility table of section 5 of LMM_PLAN.md, and
+of the design note made from it, ``_research/lmm_design.md``: two exponential factors with
+correlation -0.7, written as two independent ones and rounded to six decimals.
 
 Run it once to create the workbook. After that the workbook is the input to edit, and
 this script refuses to overwrite it unless ``--force`` is given::
