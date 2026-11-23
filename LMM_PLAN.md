@@ -1,8 +1,8 @@
 # Plan: LMM economic scenario generator (modelx) for lifelib TVOG
 
 *Written 2026-11-23. The same day, its six open questions were decided as the draft
-proposed them (§11). The plan follows the G2++ generator's plan ([PLAN.md](PLAN.md), kept
-up to date as the design note
+proposed them (§11), and Phase 0 was done (§9). The plan follows the G2++ generator's plan
+([PLAN.md](PLAN.md), kept up to date as the design note
 [`g2pp_design.md`](lifelib/libraries/economic/_research/g2pp_design.md)) section by section,
 and says "as in `BasicG2PP`" where a piece carries over unchanged. The numbers come from a
 throwaway numpy prototype, reported in Appendix A.*
@@ -565,9 +565,23 @@ to stay under 600 MB.
 | 5. Into lifelib | the docs page `BasicLMM.md` in the form of `BasicG2PP.md`; `index.md` with three primary models, the two notebooks and the two gallery scripts; the `.nblink` files; `_research/lmm_design.md` made from this plan, which the tests cite in place of this plan; a clean `doc/preview` build. Then the merge by the route of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3: the two library folders restored on a lifelib branch, the notebooks added to lifelib's shared pages, release notes | `lifelib.create("economic", ...)` gives `BasicLMM` and `CashValue_ME_LMM` |
 | 6. Later, optional | a helper that makes a `Vol` table from parametric volatilities and correlations, with tables of the caplet and swaption volatilities it implies; a predictor-corrector step or a martingale discretisation as a setting; a martingale (moment-matching) adjustment; a cap on rates; volatilities that also depend on calendar time; a smile (CEV, stochastic volatility); separate discounting and forwarding curves; the optional extensions of `g2pp_design.md` §9, which apply here too | as needed |
 
-**Status, 2026-11-23**: not started. The prototype of Appendix A is the only code, and it
-is not in the repository. The merge of Phase 5 will also carry what this repository has
-changed since lifelib v0.17.4 and lifelib does not have yet (README.md, "Status").
+**Status, 2026-11-23**: Phase 0 is done.
+
+- **Workbook**: `scripts/make_input_lmm.py` wrote `lmm_input.xlsx` with the `Params` of §5,
+  the `Curve` and `Fund` sheets read from `g2pp_input.xlsx` (its `--source`), the example
+  `Vol` table and a `Notes` sheet, which carries the two warnings of §10 on the table.
+- **Tests**: `tests/lmm_registry.py` holds the paths and `write_workbook`, and
+  `conftest.py` the fixtures `lmm_workbook` and `lmm_model`, which skips until `BasicLMM`
+  is built. `tests/test_input_lmm.py` has 6 tests: the sheets, the types in `Params`, the
+  sheets shared with `g2pp_input.xlsx`, the example table against its formula, the example
+  run's needs against the curve, the table and the fund, and `write_workbook`. The whole
+  suite gives 113 passed and 1 skipped (the appliedlife curve test, as before) in about
+  23 s.
+- **README.md** lists the new files.
+
+The prototype of Appendix A is not in the repository. The merge of Phase 5 will also carry
+what this repository has changed since lifelib v0.17.4 and lifelib does not have yet
+(README.md, "Status").
 
 ## 10. Risks and mitigations
 
