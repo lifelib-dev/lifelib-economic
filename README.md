@@ -19,7 +19,10 @@ links to lifelib's docs, lifelib's Colab cell in the notebooks and two gallery s
 The docs pages of both models are drafted in MyST, and the design is kept in a note in
 the library. All of this was merged into lifelib's `main` on 2026-11-22, in
 [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188); the release
-of lifelib v0.17.4 follows. Phase 6 lists optional extensions.
+of lifelib v0.17.4 follows. Since the merge, `CashValue_ME_G2PP` is documented as an
+example model, like the savings library's `CashValue_ME_EX1`: `g2pp-tvog.ipynb` describes
+it, and its docs page is gone. lifelib does not have this change yet. Phase 6 lists
+optional extensions.
 
 ## Layout
 
@@ -36,17 +39,19 @@ In `lifelib/libraries/economic/`:
 |---|---|
 | `g2pp_input.xlsx` | Excel input, read by both G2++ models at run time |
 | `BasicG2PP/` | the modelx model: space `G2PP` (the scenarios) and space `Validation` (checks) |
-| `CashValue_ME_G2PP/` | TVOG example: lifelib's `CashValue_ME_EX4` with a copy of `G2PP` as space `ESG` |
+| `CashValue_ME_G2PP/` | the example model of `g2pp-tvog.ipynb`: lifelib's `CashValue_ME_EX4` with a copy of `G2PP` as space `ESG` |
 | `g2pp-simulation.ipynb` | fan charts, martingale check, yield distributions, bond fund, validation summary |
-| `g2pp-tvog.ipynb` | model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
+| `g2pp-tvog.ipynb` | `CashValue_ME_G2PP` and its changes from EX4, model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
 | `plot_ex4_g2pp_rate_fan.py`, `plot_ex5_g2pp_martingale.py` | scripts for the gallery in lifelib's docs: fan charts of the short rate and the 10-year yield, and the martingale tests |
 | `tests/` | the library's pytest suite, with `g2pp_registry.py` (paths and helpers) and `reference_g2pp.py`, a pure-numpy reference implementation |
 | `_research/g2pp_design.md` | the design note: PLAN.md without the parts that concern only the drafting. Like delib's research notes, it stays out of lifelib's distributions |
 | `BasicHullWhite/`, `hull-white-simulation.ipynb`, `plot_ex1_*.py` to `plot_ex3_*.py`, `README.txt` | lifelib's own library, unchanged |
 
 In `doc/source/libraries/economic/`, the pages are MyST Markdown: `index.md`, the library's
-page, and one page per model, `BasicHullWhite.md`, `BasicG2PP.md` and
-`CashValue_ME_G2PP.md`. The `.nblink` files link the notebooks into the docs.
+page, and one page per primary model, `BasicHullWhite.md` and `BasicG2PP.md`. The `.nblink`
+files link the notebooks into the docs. `CashValue_ME_G2PP` has no page and no autosummary:
+like the savings library's example models, it is described in its notebook,
+`g2pp-tvog.ipynb`.
 
 At the root, staying here:
 
