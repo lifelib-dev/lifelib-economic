@@ -8,22 +8,21 @@
 ## Overview
 
 The **economic** library is for modeling economic scenarios.
-Currently, the library includes three models:
+Currently, the library includes two primary models:
 
 ```{toctree}
 :maxdepth: 1
 
 BasicHullWhite
 BasicG2PP
-CashValue_ME_G2PP
 ```
 
 {mod}`~economic.BasicHullWhite` simulates the short rate of the Hull-White model.
 {mod}`~economic.BasicG2PP` generates risk-neutral interest rate scenarios
 from the G2++ model, fitted to an initial yield curve,
 for calculating the time value of options and guarantees (TVOG).
-{mod}`~economic.CashValue_ME_G2PP` calculates the TVOG of savings policies
-with a maturity guarantee under those scenarios.
+The example model `CashValue_ME_G2PP` calculates the TVOG of savings policies
+under those scenarios, in the notebook {doc}`g2pp-tvog`.
 
 ```{todo}
 This library is in its early alpha release stage, and more
@@ -71,8 +70,8 @@ g2pp-tvog
 |--------------------------------------|-----------------------------------------------------------------------------------------|
 | BasicHullWhite                       | The {mod}`~economic.BasicHullWhite` model.                                              |
 | BasicG2PP                            | The {mod}`~economic.BasicG2PP` model.                                                   |
-| CashValue_ME_G2PP                    | The {mod}`~economic.CashValue_ME_G2PP` model.                                           |
-| g2pp_input.xlsx                      | Excel input read by {mod}`~economic.BasicG2PP` and {mod}`~economic.CashValue_ME_G2PP`   |
+| g2pp_input.xlsx                      | Excel input read by {mod}`~economic.BasicG2PP` and `CashValue_ME_G2PP`                  |
+| CashValue_ME_G2PP                    | The example model for *g2pp-tvog.ipynb*                                                 |
 | hull-white-simulation.ipynb          | Jupyter notebook {doc}`hull-white-simulation`                                           |
 | g2pp-simulation.ipynb                | Jupyter notebook {doc}`g2pp-simulation`                                                 |
 | g2pp-tvog.ipynb                      | Jupyter notebook {doc}`g2pp-tvog`                                                       |
