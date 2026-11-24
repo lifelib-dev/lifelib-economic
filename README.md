@@ -6,7 +6,9 @@ the time value of options and guarantees (TVOG) of lifelib insurance liabilities
 design is in the library's
 [design note](lifelib/libraries/economic/_research/g2pp_design.md), made from
 [PLAN.md](PLAN.md), and the plan for the merge in
-[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md).
+[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md). It also holds a second generator, from the
+LIBOR market model (LMM), drafted from [LMM_PLAN.md](LMM_PLAN.md), whose design is kept in
+its own [design note](lifelib/libraries/economic/_research/lmm_design.md).
 
 **Status:** Phases 0–4 of the plan are done: the input workbook, a pure-numpy reference
 implementation, the `BasicG2PP` model with its `G2PP` and `Validation` spaces, the
@@ -24,6 +26,13 @@ example model, like the savings library's `CashValue_ME_EX1`: `g2pp-tvog.ipynb` 
 it, and its docs page is gone. lifelib does not have this change yet. Phase 6 lists
 optional extensions.
 
+**LMM status:** Phases 0–4 of [LMM_PLAN.md](LMM_PLAN.md) are done, and so is the part of
+Phase 5 that is drafted here: the input workbook `lmm_input.xlsx`, a pure-numpy reference
+implementation, the `BasicLMM` model with its `LMM` and `Validation` spaces, the
+statistical tests, the TVOG example `CashValue_ME_LMM`, two notebooks, two gallery
+scripts, the docs page and the design note. lifelib does not have them yet; they go there
+by the route of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md).
+
 ## Layout
 
 The library lives where it will in lifelib: the models, the workbook, the notebooks and the
@@ -38,20 +47,25 @@ In `lifelib/libraries/economic/`:
 | Path | Contents |
 |---|---|
 | `g2pp_input.xlsx` | Excel input, read by both G2++ models at run time |
+| `lmm_input.xlsx` | Excel input, read by both LMM models at run time |
 | `BasicG2PP/` | the modelx model: space `G2PP` (the scenarios) and space `Validation` (checks) |
+| `BasicLMM/` | the modelx model: space `LMM` (the scenarios) and space `Validation` (checks) |
 | `CashValue_ME_G2PP/` | the example model of `g2pp-tvog.ipynb`: lifelib's `CashValue_ME_EX4` with a copy of `G2PP` as space `ESG` |
+| `CashValue_ME_LMM/` | the example model of `lmm-tvog.ipynb`: `CashValue_ME_G2PP` with a copy of `LMM` as space `ESG` |
 | `g2pp-simulation.ipynb` | fan charts, martingale check, yield distributions, bond fund, validation summary |
 | `g2pp-tvog.ipynb` | `CashValue_ME_G2PP` and its changes from EX4, model points, TVOG on the delivered input, GMAB TVOG by fund against the closed form |
-| `plot_ex4_g2pp_rate_fan.py`, `plot_ex5_g2pp_martingale.py` | scripts for the gallery in lifelib's docs: fan charts of the short rate and the 10-year yield, and the martingale tests |
-| `tests/` | the library's pytest suite, with `g2pp_registry.py` (paths and helpers) and `reference_g2pp.py`, a pure-numpy reference implementation |
-| `_research/g2pp_design.md` | the design note: PLAN.md without the parts that concern only the drafting. Like delib's research notes, it stays out of lifelib's distributions |
+| `lmm-simulation.ipynb` | inputs and caplet volatilities, fan charts, martingale and caplet checks, yield distributions, the effect of the tenor, bond fund, validation summary |
+| `lmm-tvog.ipynb` | `CashValue_ME_LMM`, TVOG on the delivered input, GMAB TVOG by fund against G2++ and by tenor, and against the closed form at the second tenor date |
+| `plot_ex4_g2pp_rate_fan.py`, `plot_ex5_g2pp_martingale.py`, `plot_ex6_lmm_rate_fan.py`, `plot_ex7_lmm_caplet_vols.py` | scripts for the gallery in lifelib's docs: fan charts of the short rate, the LIBOR rate and the 10-year yield, the G2++ martingale tests, and the LMM's caplets |
+| `tests/` | the library's pytest suite, with `g2pp_registry.py` and `lmm_registry.py` (paths and helpers of each generator's tests) and `reference_g2pp.py` and `reference_lmm.py`, pure-numpy reference implementations |
+| `_research/g2pp_design.md`, `_research/lmm_design.md` | the design notes: PLAN.md and LMM_PLAN.md without the parts that concern only the drafting. Like delib's research notes, they stay out of lifelib's distributions |
 | `BasicHullWhite/`, `hull-white-simulation.ipynb`, `plot_ex1_*.py` to `plot_ex3_*.py`, `README.txt` | lifelib's own library, unchanged |
 
 In `doc/source/libraries/economic/`, the pages are MyST Markdown: `index.md`, the library's
-page, and one page per primary model, `BasicHullWhite.md` and `BasicG2PP.md`. The `.nblink`
-files link the notebooks into the docs. `CashValue_ME_G2PP` has no page and no autosummary:
-like the savings library's example models, it is described in its notebook,
-`g2pp-tvog.ipynb`.
+page, and one page per primary model, `BasicHullWhite.md`, `BasicG2PP.md` and
+`BasicLMM.md`. The `.nblink` files link the notebooks into the docs. `CashValue_ME_G2PP`
+and `CashValue_ME_LMM` have no page and no autosummary: like the savings library's example
+models, they are described in their notebooks, `g2pp-tvog.ipynb` and `lmm-tvog.ipynb`.
 
 At the root, staying here:
 
@@ -61,17 +75,24 @@ At the root, staying here:
 | `scripts/build_model.py` | creates `BasicG2PP/` with the `G2PP` space through the modelx API (bootstrap only) |
 | `scripts/add_validation_space.py` | adds the `Validation` space to the written model (bootstrap only) |
 | `scripts/build_cashvalue_g2pp.py` | builds `CashValue_ME_G2PP/` from lifelib's EX4 and `G2PP` (bootstrap only) |
+| `scripts/make_input_lmm.py` | creates `lmm_input.xlsx`, copying the `Curve` and `Fund` sheets of `g2pp_input.xlsx` (bootstrap only) |
+| `scripts/build_lmm.py` | creates `BasicLMM/` with the `LMM` space through the modelx API (bootstrap only) |
+| `scripts/add_validation_space_lmm.py` | adds the `Validation` space to `BasicLMM/` (bootstrap only) |
+| `scripts/build_cashvalue_lmm.py` | builds `CashValue_ME_LMM/` from `CashValue_ME_G2PP/` and `LMM` (bootstrap only) |
 | `doc/preview/` | the [docs preview](#docs-preview): builds the pages with lifelib's Sphinx settings, to see how they render before the merge |
 | `pytest.ini`, `.gitattributes` | lifelib's pytest options and line-ending rules, so the suite and the files behave as in lifelib |
-| `PLAN.md`, `INTEGRATION_PLAN.md` | the plan the models were drafted from, whose design parts became the design note, and the plan for the merge |
+| `PLAN.md`, `INTEGRATION_PLAN.md` | the plan the G2++ models were drafted from, whose design parts became the design note, and the plan for the merge |
+| `LMM_PLAN.md` | the plan the LMM models were drafted from, whose design parts became their design note |
 
-After the first build, edit the model folders (directly or in Spyder-modelx) and
-`g2pp_input.xlsx` themselves. The scripts are not kept in sync, and they refuse to
-overwrite what they created unless given `--force`. To bootstrap from nothing, run
-`make_input.py`, `build_model.py`, `add_validation_space.py` and
-`build_cashvalue_g2pp.py` in that order. They write into the library folder. Run them as
-files, as in `python scripts/make_input.py`: then `import lifelib` finds the installed
-lifelib, whose files they only read, and not this repository's `lifelib/` folder.
+After the first build, edit the model folders (directly or in Spyder-modelx) and the
+workbooks themselves. The scripts are not kept in sync, and they refuse to overwrite what
+they created unless given `--force`. To bootstrap from nothing, run `make_input.py`,
+`build_model.py`, `add_validation_space.py` and `build_cashvalue_g2pp.py` in that order,
+and then `make_input_lmm.py`, `build_lmm.py`, `add_validation_space_lmm.py` and
+`build_cashvalue_lmm.py`, which read `g2pp_input.xlsx` and `CashValue_ME_G2PP/`. They write
+into the library folder. Run them as files, as in `python scripts/make_input.py`: then
+`import lifelib` finds the installed lifelib, whose files they only read, and not this
+repository's `lifelib/` folder.
 
 Requirements: modelx, numpy, pandas, scipy, openpyxl and pytest. An installed lifelib is
 needed only by `make_input.py` and `build_cashvalue_g2pp.py`, for their default sources.
@@ -116,6 +137,24 @@ another workbook, assign its file name or absolute path to `g2pp.input_file`. Af
 editing a workbook in place, call `model.clear_all()`, because the model caches what it
 has read.
 
+`BasicLMM` gives the same outputs, under the same names and shapes, from
+`lmm_input.xlsx`, with LIBOR rates in place of short rates:
+
+```python
+model = mx.read_model("BasicLMM")
+lmm = model.LMM
+
+lmm.disc_factor_paths()    # deflators D(t_i), shape (N+1, n+1)
+lmm.libor_rate_paths()     # rates for one tenor from each month, shape (N+1, n+1)
+lmm.caplet_vol(11)         # Black volatility of the caplet on the rate set in 10 years
+
+model.Validation.summary() # largest |z| of each check against its limit
+```
+
+`CashValue_ME_LMM` is `CashValue_ME_G2PP` on these scenarios. Its closed form,
+`proj.formula_gmab_floorlet(t)`, applies to policies that mature at the second tenor date
+with an all-cash fund; `lmm-tvog.ipynb` shows how to check it.
+
 ## Input workbook
 
 - `Params`: the G2++ parameters `a`, `b`, `sigma`, `eta` and `rho`, and the run settings
@@ -130,13 +169,19 @@ has read.
   bank account. Each month a fund sells its bonds and buys new ones at the same
   maturities.
 
+`lmm_input.xlsx`, read by both LMM models, has the same `Curve` and `Fund` sheets. Its
+`Params` sheet holds the shift and the tenor of the forward rates, the number of bond
+maturities to carry and the same run settings, and its `Vol` sheet the volatility of the
+forward rates by time to expiry, one column per factor
+([LMM_PLAN.md](LMM_PLAN.md) §5).
+
 ## Tests
 
 From the repository root, where `pytest.ini` holds lifelib's pytest options:
 
 ```
-python -m pytest                 # all 108 tests, about 24 s, peaking near 1 GB of memory
-python -m pytest -m "not slow"   # without the 18 statistical tests, about 20 s
+python -m pytest                 # all 231 tests, about 70 s, peaking near 1 GB of memory
+python -m pytest -m "not slow"   # without the 40 statistical tests, about 55 s
 ```
 
 One test skips here: it compares the workbook's curves with appliedlife's source file,
@@ -147,10 +192,15 @@ properties, and then the model against the reference to a relative 1e-12. They a
 input validation, a cross-check with lifelib's BasicHullWhite when η = 0, read-write-read
 round trips and the Validation space. For `CashValue_ME_G2PP`, they check the GMAB cost
 in every scenario against the payoff recomputed from the ESG paths, and the Monte Carlo
-mean against the closed form.
+mean against the closed form. The LMM's tests follow the same pattern: the numpy reference
+against caplets priced by Black's formula and a maturity guarantee priced as a floorlet,
+then the model against the reference (they agree bit for bit), input validation, the cells
+shared with G2++, the Validation space, and the GMAB cost of `CashValue_ME_LMM` in every
+scenario.
 
-The statistical tests run the Validation checks with 10,000 scenarios over 50 years and
-2,000 over 150 years. A check with m z-scores passes if its largest |z| is below
+The statistical tests run the G2++ Validation checks with 10,000 scenarios over 50 years
+and 2,000 over 150 years, and the LMM's with 10,000 over 20 years, 2,000 over 50 years,
+500 over 140 years, and 2,000 over 10 years with monthly forward rates. A check with m z-scores passes if its largest |z| is below
 Φ⁻¹(1 − 0.00135/m), the same chance of a false alarm as one 3-sigma check.
 
 ## Docs preview
@@ -196,6 +246,6 @@ lifelib has and this build doesn't:
 ## License
 
 MIT, like lifelib; see [LICENSE](LICENSE). `BasicHullWhite` and the rest of the copy of
-lifelib's library are lifelib's own files. `CashValue_ME_G2PP` is derived from lifelib's
-`CashValue_ME_EX4`, and the example curves in `g2pp_input.xlsx` come from lifelib's
-appliedlife data, whose stated source is EIOPA.
+lifelib's library are lifelib's own files. `CashValue_ME_G2PP` and `CashValue_ME_LMM` are
+derived from lifelib's `CashValue_ME_EX4`, and the example curves in `g2pp_input.xlsx` and `lmm_input.xlsx` come
+from lifelib's appliedlife data, whose stated source is EIOPA.
