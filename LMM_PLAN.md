@@ -2,7 +2,8 @@
 
 *Written 2026-11-23. The same day, its six open questions were decided as the draft
 proposed them (§11), and Phase 0 was done. Phases 1 to 4 and the part of Phase 5 that is
-drafted here followed on 2026-11-24 (§9), and the design is now kept in the design note
+drafted here followed on 2026-11-24, and the merge into lifelib on 2026-11-28 (§9). The
+design is now kept in the design note
 [`lmm_design.md`](lifelib/libraries/economic/_research/lmm_design.md). The plan follows the
 G2++ generator's plan ([PLAN.md](PLAN.md), kept up to date as the design note
 [`g2pp_design.md`](lifelib/libraries/economic/_research/g2pp_design.md)) section by section,
@@ -570,8 +571,11 @@ with m z-scores passes if its largest |z| is below Φ⁻¹(1 - 0.00135/m). The r
 | 5. Into lifelib | the docs page `BasicLMM.md` in the form of `BasicG2PP.md`; `index.md` with three primary models, the two notebooks and the two gallery scripts; the `.nblink` files; `_research/lmm_design.md` made from this plan, which the tests cite in place of this plan; a clean `doc/preview` build. Then the merge by the route of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3: the two library folders restored on a lifelib branch, the notebooks added to lifelib's shared pages, release notes | `lifelib.create("economic", ...)` gives `BasicLMM` and `CashValue_ME_LMM` |
 | 6. Later, optional | a helper that makes a `Vol` table from parametric volatilities and correlations, with tables of the caplet and swaption volatilities it implies; a predictor-corrector step or a martingale discretisation as a setting; a martingale (moment-matching) adjustment; a cap on rates; volatilities that also depend on calendar time; a smile (CEV, stochastic volatility); separate discounting and forwarding curves; the optional extensions of `g2pp_design.md` §9, which apply here too | as needed |
 
-**Status, 2026-11-24**: Phases 0 to 4 are done, and so is the part of Phase 5 that is
-drafted here. The merge into lifelib remains. The design note
+**Status, 2026-11-28**: Phases 0 to 5 are done, except Phase 5's release notes. From
+lifelib's `main`, `lifelib.create("economic", ...)` gives `BasicLMM` and
+`CashValue_ME_LMM`. The release notes go in the release commit of the next patch release,
+v0.17.5, and the release moves the `current` tag, so that the Colab badges open the two
+new notebooks. The design note
 [`_research/lmm_design.md`](lifelib/libraries/economic/_research/lmm_design.md), made from
 this plan, is the copy of the design to keep up to date.
 
@@ -603,17 +607,35 @@ this plan, is the copy of the design to keep up to date.
   `plot_ex6_lmm_rate_fan.py` and `plot_ex7_lmm_caplet_vols.py`; the two `.nblink` files;
   and the design note, which the tests now cite. `doc/preview` builds the pages without a
   warning, nitpicky included, and in the browser no formula of the new pages is wider
-  than its column (the widest takes 604 of 725 px). Still to do, in lifelib, by the route
-  of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md): restore the two library folders on a
-  branch, add the notebooks to `banners.rst` and `notebooks.rst`, name the LMM in the
-  libraries table, and write the release notes.
+  than its column (the widest takes 604 of 725 px).
+- **Phase 5, in lifelib**, on 2026-11-28, by the route of
+  [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3. Since v0.17.4, lifelib had changed its two
+  folders only by the `point_id` fix of lifelib-dev/lifelib#192, which this repository has
+  from lifelib-dev/lifelib-economic#2. The branch `feature/economic-lmm` starts from
+  lifelib's `main` at 20d4dae and holds e6e48af: the two folders restored from 202aea3,
+  the notebooks in `banners.rst` and `notebooks.rst`, the LMM in the libraries table,
+  `CashValue_ME_LMM`'s model point tables in `test_savings.py`, and plain names in the
+  v0.17.4 release notes for two links to `CashValue_ME_G2PP`'s page, which
+  lifelib-dev/lifelib-economic#3 removed. In lifelib, the economic suite and
+  `test_savings.py` pass, 244 tests with the curve test, on Python 3.13 with modelx 0.33.0
+  and on Python 3.12 with modelx 0.32.0; the whole suite collects (11,712 tests); and the
+  new and changed files parse under Python 3.10's grammar. A full docs build has
+  v0.17.4's 18 warnings and two that come from the local build. Pull request
+  [lifelib-dev/lifelib#196](https://github.com/lifelib-dev/lifelib/pull/196) was merged as
+  lifelib-dev/lifelib@34cc996 while its CI ran. On Linux and macOS, CI then failed one
+  test, `test_libor_rate_on_a_tenor_date_is_the_rate_just_set`: its `rtol=1e-12` is too
+  tight for the rounding error of `libor_rate`, about 1e-16, at a rate near zero. On
+  Windows it passed. [lifelib-dev/lifelib#197](https://github.com/lifelib-dev/lifelib/pull/197)
+  adds `atol=1e-15`, and 941c944 does the same here.
 - **Tests**: the whole suite gives 230 passed and 1 skipped (the appliedlife curve test, as
   before) in about 70 s; `-m "not slow"` leaves out 40 statistical tests, 22 of them the
   LMM's, and takes about 55 s.
 
-The prototype of Appendix A is not in the repository. The merge of Phase 5 will also carry
-what this repository has changed since lifelib v0.17.4 and lifelib does not have yet
-(README.md, "Status").
+The prototype of Appendix A is not in the repository. The merge of Phase 5 also carried
+what this repository had changed since lifelib v0.17.4: lifelib-dev/lifelib-economic#3,
+which documents `CashValue_ME_G2PP` in `g2pp-tvog.ipynb` instead of on a page of its own,
+and lifelib-dev/lifelib-economic#4, which breaks `BasicG2PP`'s wide formulas over lines
+and fixes two docstring references (README.md, "Status").
 
 ## 10. Risks and mitigations
 

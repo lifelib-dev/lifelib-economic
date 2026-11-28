@@ -5,8 +5,7 @@ lifelib-g2pp to lifelib-economic, and when the decisions of §5 were made. Follo
 in [PLAN.md](PLAN.md) §11. Based on lifelib v0.17.3 (lifelib-dev/lifelib@d44068e). When
 step D began, lifelib's `main` was at d17cfb7, with the fixes for #182 and #183, but
 nothing had changed in `economic`'s folders, `pyproject.toml` or `doc/source/conf.py`.
-Steps A to D are done, and step E began on 2026-11-22 with the merge of step D's pull
-request (§8).*
+Steps A to F are done (§8).*
 
 ## 1. Goal
 
@@ -323,9 +322,14 @@ Steps A to C happen here, on `main`. Steps D and E happen in lifelib, on a branc
   warnings of v0.17.3's build, and the economic pages, the generated pages, both notebook
   pages and both gallery pages render. The release notes move to step E (§7). Pull
   request: [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188).
-- Step E, begun on 2026-11-22. The pull request was merged as lifelib-dev/lifelib@29e4526;
-  `main` had not moved since d17cfb7, so the merge's tree is the one CI tested. Still to
-  do: release v0.17.4 with the release notes, and move the `current` tag.
+- Step E, on 2026-11-22. The pull request was merged as lifelib-dev/lifelib@29e4526;
+  `main` had not moved since d17cfb7, so the merge's tree is the one CI tested. The same
+  day, lifelib-dev/lifelib@f380205 released v0.17.4 with the release notes, and the
+  `current` tag moved to it.
+- Step F, on 2026-11-28, with the LMM's merge ([LMM_PLAN.md](LMM_PLAN.md) §9):
+  lifelib-dev/lifelib#196 restored lifelib's two folders from this repository, so they are
+  the same in both, and the next round starts from them without a new copy. A test fix
+  that followed, lifelib-dev/lifelib#197, was made here too.
 
 ## 9. Risks
 

@@ -487,10 +487,10 @@ points build up account values far above the sum assured, so their GMAB cost is 
 | 5. Into lifelib | `BasicG2PP` and `CashValue_ME_G2PP` in lifelib's `economic` library, next to `BasicHullWhite`: drafted here at the library's lifelib path, then merged (decided, §11; steps in [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)) | `lifelib.create("economic", ...)` gives both models |
 | 6. Later, optional | space parameterised by `curve_id` (`G2PP["EUR_UP"]`) for sensitivities; martingale adjustment; `appliedlife/IntegratedLife` GMXB integration; scenario file export; coupon-bond shares (these need the curve to reach the horizon plus the bond maturity); buy-and-hold bond portfolios; an approximate closed form for mixed funds | as needed |
 
-**Status, 2026-11-22**: Phases 0–4 are done. In Phase 5, steps A to D of
-[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) are done, and
+**Status, 2026-11-22**: Phases 0–5 are done. By steps A to E of
+[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md),
 [lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188) merged the
-library into lifelib's `main`; the release of lifelib v0.17.4 follows.
+library into lifelib's `main`, and lifelib v0.17.4 released it the same day.
 
 - **Tests:** 108 tests run in about 24 s: 5 on the workbook, 21 on the reference
   implementation, 41 on the model, 6 on the Validation space, 17 on `CashValue_ME_G2PP`
