@@ -20,27 +20,34 @@ lifelib, next to a copy of lifelib's own library, and are adapted to it, with do
 links to lifelib's docs, lifelib's Colab cell in the notebooks and two gallery scripts.
 The docs pages of both models are drafted in MyST, and the design is kept in a note in
 the library. All of this was merged into lifelib's `main` on 2026-11-22, in
-[lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188); the release
-of lifelib v0.17.4 follows. Since the merge, `CashValue_ME_G2PP` is documented as an
-example model, like the savings library's `CashValue_ME_EX1`: `g2pp-tvog.ipynb` describes
-it, and its docs page is gone. lifelib does not have this change yet. Phase 6 lists
-optional extensions.
+[lifelib-dev/lifelib#188](https://github.com/lifelib-dev/lifelib/pull/188), and released
+the same day in lifelib v0.17.4. Since the release, `CashValue_ME_G2PP` is documented as
+an example model, like the savings library's `CashValue_ME_EX1`: `g2pp-tvog.ipynb`
+describes it, and its docs page is gone. lifelib got this change with the LMM. Phase 6
+lists optional extensions.
 
-**LMM status:** Phases 0–4 of [LMM_PLAN.md](LMM_PLAN.md) are done, and so is the part of
-Phase 5 that is drafted here: the input workbook `lmm_input.xlsx`, a pure-numpy reference
-implementation, the `BasicLMM` model with its `LMM` and `Validation` spaces, the
-statistical tests, the TVOG example `CashValue_ME_LMM`, two notebooks, two gallery
-scripts, the docs page and the design note. lifelib does not have them yet; they go there
-by the route of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md).
+**LMM status:** Phases 0–5 of [LMM_PLAN.md](LMM_PLAN.md) are done, except the release
+notes: the input workbook `lmm_input.xlsx`, a pure-numpy reference implementation, the
+`BasicLMM` model with its `LMM` and `Validation` spaces, the statistical tests, the TVOG
+example `CashValue_ME_LMM`, two notebooks, two gallery scripts, the docs page and the
+design note. All of this was merged into lifelib's `main` on 2026-11-28, in
+[lifelib-dev/lifelib#196](https://github.com/lifelib-dev/lifelib/pull/196), by the route
+of [INTEGRATION_PLAN.md](INTEGRATION_PLAN.md). One of its tests then failed in CI on Linux
+and macOS, with a tolerance too tight for a rounding error;
+[lifelib-dev/lifelib#197](https://github.com/lifelib-dev/lifelib/pull/197) loosens it, and
+so does this repository. The release notes go in the release commit of lifelib v0.17.5,
+and the release moves the `current` tag, so that the Colab badges open the new notebooks.
 
 ## Layout
 
-The library lives where it will in lifelib: the models, the workbook, the notebooks and the
+The library lives where it does in lifelib: the models, the workbook, the notebooks and the
 tests in `lifelib/libraries/economic/`, and the docs pages in
 `doc/source/libraries/economic/`. Both folders started as a copy of lifelib's own
-`economic` library at v0.17.3, in commit e292f34, so
-`git diff e292f34 -- lifelib doc/source` shows what merging the draft will change in lifelib
-([INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3).
+`economic` library at v0.17.3, in commit e292f34, and have since been merged into lifelib
+twice, with the G2++ models and with the LMM
+([INTEGRATION_PLAN.md](INTEGRATION_PLAN.md) §3). They now equal lifelib's on `main`, so
+from the commit where new work starts, `git diff <that commit> -- lifelib doc/source`
+shows what the next merge will change in lifelib.
 
 In `lifelib/libraries/economic/`:
 
